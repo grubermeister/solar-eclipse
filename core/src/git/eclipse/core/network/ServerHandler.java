@@ -5,7 +5,6 @@ import git.eclipse.core.network.packets.Packet;
 import git.eclipse.core.network.packets.Packet00Connect;
 import git.eclipse.core.network.packets.Packet01Disconnect;
 import git.eclipse.core.network.packets.PacketType;
-import git.eclipse.core.swing.Server;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -123,7 +122,6 @@ public class ServerHandler implements Runnable {
 
         if(!alreadyConnected) {
             m_ConnectedPlayers.add(client);
-            Server.PushMessage(String.format("%s:%d connected!", client.IP, client.Port));
         }
     }
 
@@ -134,7 +132,6 @@ public class ServerHandler implements Runnable {
         for(ClientData client : m_ConnectedPlayers) {
             if(client.IP.equals(dcIP) && client.Port == dcPort) {
                 m_ConnectedPlayers.remove(client);
-                Server.PushMessage(String.format("%s:%d disconnected!", client.IP, client.Port));
                 break;
             }
         }
