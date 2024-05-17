@@ -1,26 +1,15 @@
 import org.gradle.internal.os.OperatingSystem
 
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
-    }
-}
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
-sourceSets {
-    main {
-        java {
-            setSrcDirs(listOf("src/"))
-        }
-
-        resources {
-            setSrcDirs(listOf("../resources"))
-        }
-    }
+sourceSets.main {
+    java.setSrcDirs(listOf("src/"))
+    resources.setSrcDirs(listOf("../assets/server/"))
 }
 
 val appName = "Eclipse Origins"
 val mainClassName = "git.eclipse.server.Main"
-val assetsDir = file("../resources")
+val assetsDir = file("../assets/server/")
 
 tasks.register<JavaExec>("run") {
     dependsOn("classes")
@@ -64,8 +53,4 @@ tasks.named<Jar>("dist").configure {
     dependsOn("classes")
 }
 
-eclipse {
-    project {
-        name = "Eclipse Server"
-    }
-}
+eclipse.project.name = "Eclipse Server"

@@ -4,12 +4,6 @@ plugins {
     id("java-library")
 }
 
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
-    }
-}
-
 buildscript {
     group = "atomix.soft"
     version = "1.0-SNAPSHOT"
