@@ -1,6 +1,6 @@
-package git.eclipse.core.graphics.render2D;
+package git.eclipse.client.graphics.render2D;
 
-import git.eclipse.core.graphics.Texture;
+import git.eclipse.client.graphics.Texture;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 

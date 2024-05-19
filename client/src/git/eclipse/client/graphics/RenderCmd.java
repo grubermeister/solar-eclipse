@@ -1,4 +1,4 @@
-package git.eclipse.core.graphics;
+package git.eclipse.client.graphics;
 
 import org.joml.Math;
 import org.joml.Vector3f;

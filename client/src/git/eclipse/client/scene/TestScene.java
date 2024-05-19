@@ -4,9 +4,9 @@ import git.eclipse.client.AssetLoader;
 import git.eclipse.client.audio.WavFile;
 import git.eclipse.client.audio.exceptions.WavFileException;
 import git.eclipse.core.game.Constants;
-import git.eclipse.core.graphics.render2D.Sprite;
-import git.eclipse.core.graphics.cameras.OrthoCamera;
-import git.eclipse.core.graphics.render2D.SpriteBatch;
+import git.eclipse.client.graphics.render2D.Sprite;
+import git.eclipse.client.graphics.cameras.OrthoCamera;
+import git.eclipse.client.graphics.render2D.SpriteBatch;
 import org.joml.Math;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -21,8 +21,6 @@ public class TestScene extends SceneAdapter {
     private List<Sprite> spriteList;
     private OrthoCamera camera;
     private SpriteBatch batch;
-
-    private WavFile sound;
 
     @Override
     public void show() {
@@ -53,14 +51,6 @@ public class TestScene extends SceneAdapter {
 
         spriteList.add(sprite);
         batch = new SpriteBatch(AssetLoader.GetShader("basic"));
-
-        try {
-            sound = WavFile.openWavFile(new File("assets/sound/Decision1.wav"));
-            sound.display();
-        } catch (IOException | WavFileException e) {
-            System.err.println("Failed to read file");
-            System.exit(-1);
-        }
     }
 
     @Override

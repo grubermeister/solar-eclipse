@@ -1,9 +1,9 @@
-package git.eclipse.core.graphics.render2D;
+package git.eclipse.client.graphics.render2D;
 
-import git.eclipse.core.graphics.RenderCmd;
-import git.eclipse.core.graphics.Shader;
-import git.eclipse.core.graphics.Texture;
-import git.eclipse.core.graphics.cameras.OrthoCamera;
+import git.eclipse.client.graphics.Shader;
+import git.eclipse.client.graphics.RenderCmd;
+import git.eclipse.client.graphics.Texture;
+import git.eclipse.client.graphics.cameras.OrthoCamera;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;

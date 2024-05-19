@@ -1,4 +1,4 @@
-package git.eclipse.core.graphics;
+package git.eclipse.client.graphics;
 
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;

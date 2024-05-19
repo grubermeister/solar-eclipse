@@ -1,4 +1,4 @@
-package git.eclipse.core.graphics;
+package git.eclipse.client.graphics;
 
 import git.eclipse.core.utils.Utils;
 import org.joml.Matrix4f;

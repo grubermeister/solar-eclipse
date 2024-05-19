@@ -1,7 +1,7 @@
 package git.eclipse.client;
 
-import git.eclipse.core.graphics.Shader;
-import git.eclipse.core.graphics.Texture;
+import git.eclipse.client.graphics.Shader;
+import git.eclipse.client.graphics.Texture;
 
 import java.util.ArrayList;
 import java.util.HashMap;

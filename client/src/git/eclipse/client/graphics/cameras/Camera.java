@@ -1,4 +1,4 @@
-package git.eclipse.core.graphics.cameras;
+package git.eclipse.client.graphics.cameras;
 
 import org.joml.Matrix4f;
 import org.joml.Vector3f;

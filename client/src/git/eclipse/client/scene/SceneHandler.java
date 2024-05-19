@@ -1,6 +1,6 @@
 package git.eclipse.client.scene;
 
-import git.eclipse.core.Window;
+import git.eclipse.client.graphics.Window;
 
 import java.util.HashMap;
 import java.util.Map;

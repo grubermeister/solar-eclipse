@@ -1,4 +1,4 @@
-package git.eclipse.core.graphics.font;
+package git.eclipse.client.graphics.font;
 
 /**
  * Creates a font Glyph.

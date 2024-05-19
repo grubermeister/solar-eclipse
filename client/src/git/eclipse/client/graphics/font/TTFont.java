@@ -1,15 +1,13 @@
-package git.eclipse.core.graphics.font;
+package git.eclipse.client.graphics.font;
 
-import git.eclipse.core.graphics.Texture;
-import git.eclipse.core.graphics.render2D.SpriteBatch;
+import git.eclipse.client.graphics.render2D.SpriteBatch;
+import git.eclipse.client.graphics.Texture;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.system.MemoryUtil;
 
 import java.awt.*;
-import java.awt.font.FontRenderContext;
 import java.awt.font.GlyphMetrics;
-import java.awt.font.GlyphVector;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
