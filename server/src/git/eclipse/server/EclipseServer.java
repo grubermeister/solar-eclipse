@@ -48,6 +48,7 @@ public class EclipseServer implements Runnable {
 
             } catch (IOException e) {
                 System.err.println(e.getMessage());
+                m_Running = false;
             }
         }
 
@@ -60,32 +61,47 @@ public class EclipseServer implements Runnable {
         }
     }
 
+    /**
+     * Handles the command and arguments passed through the terminal.
+     *
+     * @param input command and possible arguments to process.
+     */
     private void handleCommand(String input) {
         String cmd = input;
         List<String> arguments = new ArrayList<>();
         boolean hasArgs = input.indexOf(' ') != -1;
+
+        // If it has arguments we should store them
         if(hasArgs) {
             String args = input.substring(input.indexOf(' ') + 1);
             cmd = input.substring(0, input.indexOf(' '));
 
             while(!args.isEmpty()) {
-                if(args.indexOf(' ') != -1) {
+                if(args.indexOf(' ') != -1) { // If we find a space, there are more arguments
                     String curr = args.substring(0, args.indexOf(' '));
                     arguments.add(curr);
                     args = args.substring(args.indexOf(' ') + 1);
-                } else {
+                } else { // Otherwise we're on our last one
                     arguments.add(args);
                     args = "";
                 }
             }
         }
 
-        if(cmd.equalsIgnoreCase("exit")) {
-            m_Running = false;
-        } else if(cmd.equalsIgnoreCase("test")) {
-            System.out.println("Testing!");
+        // Command Switch Statement
+        switch (cmd) {
+            case "Exit", "exit": {
+                m_Running = false;
+                break;
+            }
+
+            case "Test", "test": {
+                System.out.println("Testing!!!");
+                break;
+            }
         }
 
+        // Empty our list just to make sure memory is free
         if(!arguments.isEmpty())
             arguments.clear();
     }

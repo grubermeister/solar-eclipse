@@ -1,8 +1,8 @@
 package git.eclipse.client;
 
-import git.eclipse.client.scenes.MainScene;
-import git.eclipse.core.scene.SceneHandler;
-import git.eclipse.client.scenes.TestScene;
+import git.eclipse.client.scene.MainScene;
+import git.eclipse.client.scene.SceneHandler;
+import git.eclipse.client.scene.TestScene;
 import git.eclipse.core.Window;
 import git.eclipse.core.graphics.RenderCmd;
 import git.eclipse.core.network.ClientData;

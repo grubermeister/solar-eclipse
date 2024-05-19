@@ -16,6 +16,7 @@ out float v_TileFactor;
 void main()
 {
     v_Color = a_Color;
+
     v_TexCoord = a_TexCoord;
     v_TexIndex = a_TexIndex;
     v_TileFactor = a_TileFactor;

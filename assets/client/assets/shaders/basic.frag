@@ -9,6 +9,15 @@ in float v_TileFactor;
 
 uniform sampler2D u_Textures[32];
 
+// Integral to using transparency with BMP
+vec4 transparentKey(vec4 testColor)
+{
+    if(testColor.r == 1 && testColor.g == 0 && testColor.b == 1)
+    return vec4(testColor.rgb, 0);
+
+    return testColor;
+}
+
 void main()
 {
     vec4 texColor = vec4(1, 1, 1, 1);
@@ -48,5 +57,5 @@ void main()
         case 31: texColor *= texture(u_Textures[31], v_TexCoord * v_TileFactor) * v_Color; break;
     }
 
-    color = texColor;
+    color = transparentKey(texColor);
 }

@@ -36,7 +36,7 @@ public class Main {
 
     public static void main(String[] args) {
         final ServerData data = new ServerData();
-        final Hashtable<String, String> configInfo = GetConfigInfo("data/config.ini");
+        final Hashtable<String, String> configInfo = GetConfigInfo("assets/server/data/config.ini");
 
         try {
             data.GameName = configInfo.get(NAME_VAR);

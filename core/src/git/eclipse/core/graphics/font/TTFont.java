@@ -19,8 +19,7 @@ import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
-import static java.awt.Font.MONOSPACED;
-import static java.awt.Font.PLAIN;
+import static java.awt.Font.*;
 
 public class TTFont {
     private final Map<Character, Glyph> m_Glyphs;
@@ -183,6 +182,7 @@ public class TTFont {
         if (antiAlias) {
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         }
+
         g.setFont(font);
         FontMetrics metrics = g.getFontMetrics();
         g.dispose();

@@ -17,8 +17,8 @@ public class AssetLoader {
     private static final String TEXTURES_DIR = "assets/graphics/";
     private static final String SHADERS_DIR = "assets/shaders/";
 
-    private static final String SFX_DIR = "/assets/audio/sfx/";
-    private static final String BGM_DIR = "/assets/audio/bgm/";
+    private static final String SFX_DIR = "assets/audio/sfx/";
+    private static final String BGM_DIR = "assets/audio/bgm/";
     // =========== INTERNAL DIRECTORIES ===========
 
     // =========== EXTERNAL DIRECTORIES ===========
