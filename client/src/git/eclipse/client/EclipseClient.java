@@ -1,5 +1,6 @@
 package git.eclipse.client;
 
+import git.eclipse.client.audio.AudioMaster;
 import git.eclipse.client.scene.MainScene;
 import git.eclipse.client.scene.SceneHandler;
 import git.eclipse.client.scene.TestScene;
@@ -54,6 +55,8 @@ public class EclipseClient implements Runnable {
     }
 
     private void initialize() {
+        AudioMaster.Init();
+
         m_Scenes.addScene("Test", new TestScene());
         m_Scenes.addScene("Main", new MainScene());
 
@@ -62,6 +65,8 @@ public class EclipseClient implements Runnable {
     }
 
     private void dispose() {
+        AudioMaster.CleanUp();
+
         try {
             m_Client.stop();
 

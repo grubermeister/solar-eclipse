@@ -1,8 +1,8 @@
 package git.eclipse.client.scene;
 
 import git.eclipse.client.AssetLoader;
-import git.eclipse.client.audio.WavFile;
-import git.eclipse.client.audio.exceptions.WavFileException;
+import git.eclipse.client.audio.AudioMaster;
+import git.eclipse.client.audio.AudioSource;
 import git.eclipse.core.game.Constants;
 import git.eclipse.client.graphics.render2D.Sprite;
 import git.eclipse.client.graphics.cameras.OrthoCamera;
@@ -11,8 +11,6 @@ import org.joml.Math;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +19,10 @@ public class TestScene extends SceneAdapter {
     private List<Sprite> spriteList;
     private OrthoCamera camera;
     private SpriteBatch batch;
+
+    private int sfxBuffer;
+    private AudioSource sfxSource;
+    boolean played = false;
 
     @Override
     public void show() {
@@ -51,6 +53,10 @@ public class TestScene extends SceneAdapter {
 
         spriteList.add(sprite);
         batch = new SpriteBatch(AssetLoader.GetShader("basic"));
+
+        sfxBuffer = AudioMaster.LoadSound("test", "assets/sound/Holy1.wav");
+        sfxSource = new AudioSource();
+        sfxSource.setGain(0.2f);
     }
 
     @Override
@@ -64,6 +70,12 @@ public class TestScene extends SceneAdapter {
         zoom += 0.5f * (float) dt;
 
         zoom = Math.clamp(1.0f, 1.75f, zoom);
+
+        if((zoom > 1.2f && zoom < 1.5f) && !played) {
+            sfxSource.play(sfxBuffer);
+            played = true;
+        }
+
         camera.setZoom(zoom);
 
         Sprite sprite = spriteList.get(spriteList.size()-1);
