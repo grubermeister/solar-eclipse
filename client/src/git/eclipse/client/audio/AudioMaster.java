@@ -63,7 +63,6 @@ public class AudioMaster {
         ByteBuffer byteBuffer = null;
         try {
             Wav file = new Wav(fileName);
-            System.out.println(file);
 
             byteBuffer = MemoryUtil.memAlloc(file.getData().length);
             byteBuffer.put(0, file.getData());
