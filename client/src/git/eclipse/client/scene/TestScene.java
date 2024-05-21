@@ -3,7 +3,8 @@ package git.eclipse.client.scene;
 import git.eclipse.client.AssetLoader;
 import git.eclipse.client.audio.AudioMaster;
 import git.eclipse.client.audio.AudioSource;
-import git.eclipse.client.util.Input;
+import git.eclipse.client.util.input.Controller;
+import git.eclipse.client.util.input.Input;
 import git.eclipse.core.game.Constants;
 import git.eclipse.client.graphics.render2D.Sprite;
 import git.eclipse.client.graphics.cameras.OrthoCamera;
@@ -27,9 +28,16 @@ public class TestScene extends SceneAdapter {
     private int sfxBuffer, mscBuffer;
     private AudioSource mscSrc, sfxSource;
 
+    private Controller input;
+
     @Override
     public void show() {
         spriteList = new ArrayList<>();
+        input = new Controller();
+
+        input.addBinding("music", GLFW_KEY_P);
+        input.addBinding("sound", GLFW_KEY_SPACE);
+
         camera = new OrthoCamera(600, 400);
 
         AssetLoader.AddShader("basic", "basic");
@@ -81,12 +89,10 @@ public class TestScene extends SceneAdapter {
 
         camera.setZoom(zoom);
 
-        Input input = Input.Instance();
-
-        if(input.keyJustPressed(GLFW_KEY_P))
+        if(input.justPressed("music"))
             mscSrc.play(mscBuffer);
 
-        if(input.keyJustPressed(GLFW_KEY_SPACE))
+        if(input.justPressed("sound"))
             sfxSource.play(sfxBuffer);
 
         Sprite sprite = spriteList.get(spriteList.size()-1);

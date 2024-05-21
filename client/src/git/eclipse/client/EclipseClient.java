@@ -1,7 +1,7 @@
 package git.eclipse.client;
 
 import git.eclipse.client.audio.AudioMaster;
-import git.eclipse.client.util.Input;
+import git.eclipse.client.util.input.Input;
 import git.eclipse.client.scene.MainScene;
 import git.eclipse.client.scene.SceneHandler;
 import git.eclipse.client.scene.TestScene;

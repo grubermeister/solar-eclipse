@@ -1,5 +1,6 @@
 package git.eclipse.client.util;
 
+import git.eclipse.client.util.input.Input;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;

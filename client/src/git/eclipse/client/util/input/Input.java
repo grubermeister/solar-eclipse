@@ -1,4 +1,4 @@
-package git.eclipse.client.util;
+package git.eclipse.client.util.input;
 
 import java.util.HashMap;
 import java.util.Map;
