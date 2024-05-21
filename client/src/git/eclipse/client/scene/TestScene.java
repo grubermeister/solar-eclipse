@@ -3,6 +3,7 @@ package git.eclipse.client.scene;
 import git.eclipse.client.AssetLoader;
 import git.eclipse.client.audio.AudioMaster;
 import git.eclipse.client.audio.AudioSource;
+import git.eclipse.client.util.Input;
 import git.eclipse.core.game.Constants;
 import git.eclipse.client.graphics.render2D.Sprite;
 import git.eclipse.client.graphics.cameras.OrthoCamera;
@@ -14,6 +15,9 @@ import org.joml.Vector3f;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_P;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
+
 public class TestScene extends SceneAdapter {
 
     private List<Sprite> spriteList;
@@ -21,7 +25,7 @@ public class TestScene extends SceneAdapter {
     private SpriteBatch batch;
 
     private int sfxBuffer, mscBuffer;
-    private AudioSource audioSource;
+    private AudioSource mscSrc, sfxSource;
 
     @Override
     public void show() {
@@ -54,11 +58,13 @@ public class TestScene extends SceneAdapter {
         batch = new SpriteBatch(AssetLoader.GetShader("basic"));
 
         sfxBuffer = AudioMaster.LoadSound("sfxTest", "assets/sound/Decision1.wav");
-        audioSource = new AudioSource();
+        mscBuffer = AudioMaster.LoadMusic("mscTest", "assets/music/reddwarf.mid");
 
-        mscBuffer = AudioMaster.LoadMusic("mscTest", "assets/music/blackadder.mid");
-        audioSource.play(mscBuffer);
-        audioSource.setVolume(10);
+        sfxSource = new AudioSource();
+        mscSrc = new AudioSource();
+
+        sfxSource.setVolume(25);
+        mscSrc.setVolume(10);
     }
 
     @Override
@@ -74,6 +80,14 @@ public class TestScene extends SceneAdapter {
         zoom = Math.clamp(1.0f, 1.75f, zoom);
 
         camera.setZoom(zoom);
+
+        Input input = Input.Instance();
+
+        if(input.keyJustPressed(GLFW_KEY_P))
+            mscSrc.play(mscBuffer);
+
+        if(input.keyJustPressed(GLFW_KEY_SPACE))
+            sfxSource.play(sfxBuffer);
 
         Sprite sprite = spriteList.get(spriteList.size()-1);
         Vector3f pos = sprite.getPosition();
@@ -127,7 +141,7 @@ public class TestScene extends SceneAdapter {
 
     @Override
     public void dispose() {
-        audioSource.dispose();
+        mscSrc.dispose();
 
         if(spriteList != null) {
             spriteList.clear();

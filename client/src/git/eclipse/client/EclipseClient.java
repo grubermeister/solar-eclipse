@@ -1,10 +1,11 @@
 package git.eclipse.client;
 
 import git.eclipse.client.audio.AudioMaster;
+import git.eclipse.client.util.Input;
 import git.eclipse.client.scene.MainScene;
 import git.eclipse.client.scene.SceneHandler;
 import git.eclipse.client.scene.TestScene;
-import git.eclipse.client.graphics.Window;
+import git.eclipse.client.util.Window;
 import git.eclipse.client.graphics.RenderCmd;
 import git.eclipse.core.network.ClientData;
 import git.eclipse.core.network.ClientHandler;
@@ -106,6 +107,7 @@ public class EclipseClient implements Runnable {
         double optimal = 1.0 / 60.0;
         double currentTime = System.nanoTime() / 1e9;
 
+        Input input = Input.Instance();
         while(m_Running) {
             RenderCmd.Clear();
             if(m_Window.shouldClose()) {
@@ -124,6 +126,7 @@ public class EclipseClient implements Runnable {
 
             accumulator += frameTime;
             while(accumulator >= optimal) {
+                input.process();
                 m_Scenes.update(optimal);
                 accumulator -= optimal;
             }
