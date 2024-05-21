@@ -1,11 +1,12 @@
 package git.eclipse.client.audio;
 
+import org.joml.Math;
 import org.joml.Vector3f;
 import org.lwjgl.openal.AL11;
 
 public class AudioSource {
 
-    private int m_SourceID;
+    private final int m_SourceID;
 
     public AudioSource() {
         m_SourceID = AL11.alGenSources();
@@ -27,6 +28,16 @@ public class AudioSource {
 
     public void dispose() {
         AL11.alDeleteSources(m_SourceID);
+    }
+
+    public void setVolume(int volume) {
+        if(volume <= 0) {
+            setGain(volume);
+            return;
+        }
+
+        float clampedVol = Math.clamp(1, 100, volume);
+        setGain(clampedVol / 100.0f);
     }
 
     public void setGain(float gain) {

@@ -8,6 +8,10 @@ import java.nio.IntBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * A static class meant to load Music and Sound Effects for use with OpenAL. <br />
+ * It will initially support only WAV for Sound and MIDI for Music.
+ */
 public class AudioMaster {
 
     private static AudioMaster ms_Instance = null;
@@ -18,8 +22,8 @@ public class AudioMaster {
 
     private final Map<String, Integer> m_BufferMap;
 
-    private ALCCapabilities m_alcCapabilities;
     private ALCapabilities m_alCapabilities;
+    private ALCCapabilities m_alcCapabilities;
 
     private long m_Device, m_Context;
 
@@ -27,10 +31,9 @@ public class AudioMaster {
         m_BufferMap = new HashMap<>();
     }
 
-    private Map<String, Integer> getBufferMap() {
-        return m_BufferMap;
-    }
-
+    /**
+     * Initializes OpenAL my getting the device ready and setting up the context.
+     */
     public static void Init() {
         AudioMaster instance = Instance();
 
@@ -46,17 +49,48 @@ public class AudioMaster {
         instance.m_alCapabilities = AL.createCapabilities(instance.m_alcCapabilities);
     }
 
+    /**
+     * Cleans up our buffers before cleaning up OpenAL
+     */
     public static void CleanUp() {
         AudioMaster instance = Instance();
 
-        instance.getBufferMap().values().forEach(AL11::alDeleteBuffers);
-        instance.getBufferMap().clear();
+        instance.m_BufferMap.values().forEach(AL11::alDeleteBuffers);
+        instance.m_BufferMap.clear();
 
         ALC11.alcMakeContextCurrent(MemoryUtil.NULL);
         ALC11.alcDestroyContext(instance.m_Context);
         ALC11.alcCloseDevice(instance.m_Device);
     }
 
+    public static int LoadMusic(String name, String fileName) {
+        int buffer = AL11.alGenBuffers();
+
+        ByteBuffer byteBuffer = null;
+        try {
+            Midi file = new Midi(fileName);
+
+            byteBuffer = MemoryUtil.memAlloc(file.getData().length);
+            byteBuffer.put(file.getData());
+
+            AL11.alBufferData(buffer, AL11.AL_FORMAT_STEREO16, byteBuffer.flip(), (int) file.getSampleRate());
+        } finally {
+            if(byteBuffer != null)
+                MemoryUtil.memFree(byteBuffer);
+        }
+
+        Instance().m_BufferMap.put(name, buffer);
+
+        return buffer;
+    }
+
+    /**
+     * Load a Sound Effect (WAV) into an OpenAL buffer for use.
+     *
+     * @param name the name we'll store the buffer in the {@link Map} under
+     * @param fileName the path to the .wav file
+     * @return a buffer ID to be used with {@link AudioSource}
+     */
     public static int LoadSound(String name, String fileName) {
         int buffer = AL11.alGenBuffers();
 
@@ -67,15 +101,33 @@ public class AudioMaster {
             byteBuffer = MemoryUtil.memAlloc(file.getData().length);
             byteBuffer.put(0, file.getData());
 
-            int format = file.getSampleSize() == 8 ? AL11.AL_FORMAT_MONO8 : AL11.AL_FORMAT_MONO16;
+            int format = WavFormat(file);
             AL11.alBufferData(buffer, format, byteBuffer, (int) file.getSampleRate());
         } finally {
             if(byteBuffer != null)
                 MemoryUtil.memFree(byteBuffer);
         }
 
-        Instance().getBufferMap().put(name, buffer);
+        Instance().m_BufferMap.put(name, buffer);
         return buffer;
+    }
+
+    /**
+     * Reads the amount of channels and the sample size to decide whether we should use
+     * <ul>
+     *     <li><b>AL_FORMAT_MONO8/AL_FORMAT_MONO16</b></li>
+     *     <li><b>AL_FORMAT_STEREO8/AL_FORMAT_STEREO16</b></li>
+     * </ul>
+     * @param file the {@link Wav} file we'll read to get the format
+     * @return the OpenAL flag for Mono8-16 or Stereo8-16
+     */
+    private static int WavFormat(Wav file) {
+        int format;
+
+        if(file.getChannels() == 1) format = file.getSampleSize() == 8 ? AL11.AL_FORMAT_MONO8 : AL11.AL_FORMAT_MONO16;
+        else format = file.getSampleSize() == 8 ? AL11.AL_FORMAT_STEREO8 : AL11.AL_FORMAT_STEREO16;
+
+        return format;
     }
 
 }

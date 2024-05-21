@@ -3,13 +3,12 @@ package git.eclipse.client.audio;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 
-/**
- * Reads a WAV file and stores the information, so we can use it with OpenAL.
- */
-public class Wav {
+public class Midi {
 
     private final File m_File;
 
@@ -18,35 +17,25 @@ public class Wav {
     private int m_FrameSize, m_SampleSize;
     private float m_SampleRate, m_FrameRate;
 
-    public Wav(String fileName) {
-        m_File = new File(fileName);
-
-        if(m_File.exists()) load();
-        else throw new RuntimeException("Failed to load file: " + fileName);
+    public Midi(String filePath) {
+        m_File = new File(filePath);
+        load();
     }
 
     private void load() {
-        int totalFramesRead = 0;
         try {
-            // Loads up an AudioInputStream and AudioFormat for file processing
             AudioInputStream ais = AudioSystem.getAudioInputStream(m_File);
             AudioFormat format = ais.getFormat();
 
-            int bytesPerFrame = format.getFrameSize();
-            if(bytesPerFrame == AudioSystem.NOT_SPECIFIED) bytesPerFrame = 1;
 
-            // Set the buffer size (fixed) ty grubermeister!!!
-            int bufferSize = 4096;
+            int bufferSize = 1024 * 8;
             byte[] buffer = new byte[bufferSize];
             ByteArrayOutputStream out = new ByteArrayOutputStream();
 
             try {
                 int numBytesRead;
-                while ((numBytesRead = ais.read(buffer)) != -1) {
+                while ((numBytesRead = ais.read(buffer)) != -1)
                     out.write(buffer, 0, numBytesRead);
-                    //numFramesRead = numBytesRead / bytesPerFrame;
-                    totalFramesRead += numBytesRead / bytesPerFrame;
-                }
 
                 m_Data = out.toByteArray();
             } catch (Exception ex) {
@@ -60,14 +49,11 @@ public class Wav {
 
             m_SampleRate = format.getSampleRate();
             m_FrameRate  = format.getFrameRate();
-
-        } catch (Exception e) {
+        } catch (IOException | UnsupportedAudioFileException e) {
             System.err.println(e.getMessage());
             System.exit(-1);
         }
     }
-
-    // Getters
 
     public byte[] getData() {
         return m_Data;

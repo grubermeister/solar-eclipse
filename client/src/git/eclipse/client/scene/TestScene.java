@@ -20,9 +20,8 @@ public class TestScene extends SceneAdapter {
     private OrthoCamera camera;
     private SpriteBatch batch;
 
-    private int sfxBuffer;
-    private AudioSource sfxSource;
-    boolean played = false;
+    private int sfxBuffer, mscBuffer;
+    private AudioSource audioSource;
 
     @Override
     public void show() {
@@ -54,9 +53,12 @@ public class TestScene extends SceneAdapter {
         spriteList.add(sprite);
         batch = new SpriteBatch(AssetLoader.GetShader("basic"));
 
-        sfxBuffer = AudioMaster.LoadSound("test", "assets/sound/Holy1.wav");
-        sfxSource = new AudioSource();
-        sfxSource.setGain(0.2f);
+        sfxBuffer = AudioMaster.LoadSound("sfxTest", "assets/sound/Decision1.wav");
+        audioSource = new AudioSource();
+
+        mscBuffer = AudioMaster.LoadMusic("mscTest", "assets/music/blackadder.mid");
+        audioSource.play(mscBuffer);
+        audioSource.setVolume(10);
     }
 
     @Override
@@ -70,11 +72,6 @@ public class TestScene extends SceneAdapter {
         zoom += 0.5f * (float) dt;
 
         zoom = Math.clamp(1.0f, 1.75f, zoom);
-
-        if((zoom > 1.2f && zoom < 1.5f) && !played) {
-            sfxSource.play(sfxBuffer);
-            played = true;
-        }
 
         camera.setZoom(zoom);
 
@@ -130,6 +127,8 @@ public class TestScene extends SceneAdapter {
 
     @Override
     public void dispose() {
+        audioSource.dispose();
+
         if(spriteList != null) {
             spriteList.clear();
             spriteList = null;
