@@ -1,4 +1,4 @@
-package git.eclipse.client.graphics;
+package git.eclipse.client.util;
 
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
@@ -71,6 +71,7 @@ public class Window {
         glfwSwapInterval(swapInterval);
 
         glfwSetWindowSizeCallback(m_Handle, this::resize);
+        glfwSetKeyCallback(m_Handle, Input::key_callback);
 
         GL.createCapabilities();
     }
