@@ -1,4 +1,4 @@
-package git.eclipse.client.audio;
+package git.eclipse.client.audio.files;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;

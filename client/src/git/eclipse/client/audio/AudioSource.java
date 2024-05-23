@@ -16,18 +16,31 @@ public class AudioSource {
         setPosition(new Vector3f(0));
     }
 
-    public void play(int buffer) {
+    public void start(int buffer) {
+        stop();
         AL11.alSourcei(m_SourceID, AL11.AL_BUFFER, buffer);
+        play();
+    }
+
+    public void play() {
         AL11.alSourcePlay(m_SourceID);
     }
 
-    public void pause(int buffer) {
-        AL11.alSourcei(m_SourceID, AL11.AL_BUFFER, buffer);
+    public void pause() {
         AL11.alSourcePause(m_SourceID);
     }
 
+    public void stop() {
+        AL11.alSourceStop(m_SourceID);
+    }
+
     public void dispose() {
+        stop();
         AL11.alDeleteSources(m_SourceID);
+    }
+
+    public boolean isPlaying() {
+        return AL11.alGetSourcei(m_SourceID, AL11.AL_SOURCE_STATE) == AL11.AL_PLAYING;
     }
 
     public void setVolume(int volume) {
@@ -46,6 +59,14 @@ public class AudioSource {
 
     public void setPitch(float pitch) {
         AL11.alSourcef(m_SourceID, AL11.AL_PITCH, pitch);
+    }
+
+    public void setLooping(boolean looping) {
+        AL11.alSourcei(m_SourceID, AL11.AL_LOOPING, looping ? AL11.AL_TRUE : AL11.AL_FALSE);
+    }
+
+    public void setVelocity(Vector3f velocity) {
+        AL11.alSource3f(m_SourceID, AL11.AL_VELOCITY, velocity.x, velocity.y,velocity.z);
     }
 
     public void setPosition(Vector3f position) {

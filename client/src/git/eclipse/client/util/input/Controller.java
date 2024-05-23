@@ -9,7 +9,7 @@ public class Controller {
 
     private final Input m_In;
 
-    private Map<String, List<Integer>> m_InputMap;
+    private final Map<String, List<Integer>> m_InputMap;
 
     public Controller() {
         m_In = Input.Instance();

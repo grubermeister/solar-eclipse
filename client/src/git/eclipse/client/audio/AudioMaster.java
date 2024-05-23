@@ -1,5 +1,7 @@
 package git.eclipse.client.audio;
 
+import git.eclipse.client.audio.files.Midi;
+import git.eclipse.client.audio.files.Wav;
 import org.lwjgl.openal.*;
 import org.lwjgl.system.MemoryUtil;
 
@@ -63,6 +65,13 @@ public class AudioMaster {
         ALC11.alcCloseDevice(instance.m_Device);
     }
 
+    /**
+     * Load Music (MIDI) into an OpenAL buffer for use.
+     *
+     * @param name the name we'll store the buffer in the {@link Map} under
+     * @param fileName the path to the .mid file
+     * @return a buffer ID to be used with {@link AudioSource}
+     */
     public static int LoadMusic(String name, String fileName) {
         int buffer = AL11.alGenBuffers();
 
@@ -73,7 +82,8 @@ public class AudioMaster {
             byteBuffer = MemoryUtil.memAlloc(file.getData().length);
             byteBuffer.put(file.getData());
 
-            AL11.alBufferData(buffer, AL11.AL_FORMAT_STEREO16, byteBuffer.flip(), (int) file.getSampleRate());
+            int format = FileFormat(file.getChannels(), file.getSampleSize());
+            AL11.alBufferData(buffer, format, byteBuffer.flip(), (int) file.getSampleRate());
         } finally {
             if(byteBuffer != null)
                 MemoryUtil.memFree(byteBuffer);
@@ -101,7 +111,7 @@ public class AudioMaster {
             byteBuffer = MemoryUtil.memAlloc(file.getData().length);
             byteBuffer.put(0, file.getData());
 
-            int format = WavFormat(file);
+            int format = FileFormat(file.getChannels(), file.getSampleSize());
             AL11.alBufferData(buffer, format, byteBuffer, (int) file.getSampleRate());
         } finally {
             if(byteBuffer != null)
@@ -113,19 +123,20 @@ public class AudioMaster {
     }
 
     /**
-     * Reads the amount of channels and the sample size to decide whether we should use
+     * Uses the amount of channels and the sample size to decide whether we should use
      * <ul>
      *     <li><b>AL_FORMAT_MONO8/AL_FORMAT_MONO16</b></li>
      *     <li><b>AL_FORMAT_STEREO8/AL_FORMAT_STEREO16</b></li>
      * </ul>
-     * @param file the {@link Wav} file we'll read to get the format
+     * @param channels the number of channels from the audio file
+     * @param sampleSize the sample size of the audio file
      * @return the OpenAL flag for Mono8-16 or Stereo8-16
      */
-    private static int WavFormat(Wav file) {
+    private static int FileFormat(int channels, int sampleSize) {
         int format;
 
-        if(file.getChannels() == 1) format = file.getSampleSize() == 8 ? AL11.AL_FORMAT_MONO8 : AL11.AL_FORMAT_MONO16;
-        else format = file.getSampleSize() == 8 ? AL11.AL_FORMAT_STEREO8 : AL11.AL_FORMAT_STEREO16;
+        if(channels == 1) format = sampleSize == 8 ? AL11.AL_FORMAT_MONO8 : AL11.AL_FORMAT_MONO16;
+        else format = sampleSize == 8 ? AL11.AL_FORMAT_STEREO8 : AL11.AL_FORMAT_STEREO16;
 
         return format;
     }
