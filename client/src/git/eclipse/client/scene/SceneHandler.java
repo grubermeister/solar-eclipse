@@ -1,5 +1,6 @@
 package git.eclipse.client.scene;
 
+import git.eclipse.client.util.ImGuiManager;
 import git.eclipse.client.util.Window;
 
 import java.util.HashMap;
@@ -29,9 +30,14 @@ public class SceneHandler {
         }
     }
 
-    public void render() {
-        if(m_ActiveScene != null)
+    public void render(ImGuiManager uiManager) {
+        if(m_ActiveScene != null) {
             m_ActiveScene.render();
+
+            uiManager.begin();
+            m_ActiveScene.imgui();
+            uiManager.end();
+        }
     }
 
     public void resize(int width, int height) {
@@ -101,6 +107,7 @@ public class SceneHandler {
 
         public abstract void update(double dt);
         public abstract void render();
+        public abstract void imgui();
 
         public abstract void resize(int width, int height);
 

@@ -2,6 +2,7 @@ package git.eclipse.client.scene;
 
 public class SceneAdapter extends SceneHandler.Scene {
 
+
     @Override
     public void show() {  }
 
@@ -16,6 +17,9 @@ public class SceneAdapter extends SceneHandler.Scene {
 
     @Override
     public void render() { }
+
+    @Override
+    public void imgui() { }
 
     @Override
     public void resize(int width, int height) { }
