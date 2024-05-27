@@ -1,34 +1,38 @@
-package git.eclipse.client.scene;
-
-import git.eclipse.client.AssetLoader;
-import git.eclipse.client.audio.AudioMaster;
-import git.eclipse.client.audio.AudioSource;
-import git.eclipse.client.util.input.Controller;
-import git.eclipse.client.util.input.Input;
-import git.eclipse.core.game.Constants;
-import git.eclipse.client.graphics.render2D.Sprite;
-import git.eclipse.client.graphics.cameras.OrthoCamera;
-import git.eclipse.client.graphics.render2D.SpriteBatch;
-import org.joml.Math;
-import org.joml.Vector2f;
-import org.joml.Vector3f;
+package dev.atomixsoft.solar_eclipse.client.scene;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joml.Math;
+import org.joml.Vector2f;
+import org.joml.Vector3f;
+
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_P;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 
-public class TestScene extends SceneAdapter {
+import dev.atomixsoft.solar_eclipse.core.game.Constants;
+
+import dev.atomixsoft.solar_eclipse.client.util.input.Input;
+import dev.atomixsoft.solar_eclipse.client.util.input.Controller;
+
+import dev.atomixsoft.solar_eclipse.client.AssetLoader;
+
+import dev.atomixsoft.solar_eclipse.client.graphics.render2D.Sprite;
+import dev.atomixsoft.solar_eclipse.client.graphics.render2D.SpriteBatch;
+import dev.atomixsoft.solar_eclipse.client.graphics.cameras.OrthoCamera;
+import dev.atomixsoft.solar_eclipse.client.audio.AudioMaster;
+import dev.atomixsoft.solar_eclipse.client.audio.AudioSource;
+
+
+public class TestScene extends SceneAdapter{
+    private int sfxBuffer, mscBuffer;
 
     private List<Sprite> spriteList;
     private OrthoCamera camera;
     private SpriteBatch batch;
-
-    private int sfxBuffer, mscBuffer;
     private AudioSource mscSrc, sfxSource;
-
     private Controller input;
+
 
     @Override
     public void show() {
@@ -65,8 +69,8 @@ public class TestScene extends SceneAdapter {
         spriteList.add(sprite);
         batch = new SpriteBatch(AssetLoader.GetShader("basic"));
 
-        sfxBuffer = AudioMaster.LoadSound("sfxTest", "assets/sound/Decision1.wav");
-        mscBuffer = AudioMaster.LoadMusic("mscTest", "assets/music/reddwarf.mid");
+        sfxBuffer = AudioMaster.LoadSound("sfxTest", "sound/Decision2.wav");
+        mscBuffer = AudioMaster.LoadMusic("mscTest", "music/reddwarf.mid");
 
         sfxSource = new AudioSource();
         mscSrc = new AudioSource();
@@ -157,5 +161,4 @@ public class TestScene extends SceneAdapter {
         if(batch != null)
             batch.dispose();
     }
-
 }
