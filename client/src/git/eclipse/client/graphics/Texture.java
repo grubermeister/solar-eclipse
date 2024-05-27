@@ -52,7 +52,14 @@ public class Texture {
     private final String m_Filepath;
 
     private int m_TextureId;
+    private byte[] m_TextureData;
     private int m_Width, m_Height;
+
+    public Texture(int width, int height, byte[] data) {
+        m_Filepath = "";
+        ByteBuffer buffer = ByteBuffer.wrap(data);
+        generateTexture(width, height, buffer);
+    }
 
     /**
      * Creates a new texture with the specified width, height, and pixel data.
@@ -113,6 +120,7 @@ public class Texture {
 
             if (buffer == null) throw new RuntimeException(String.format("Image file [%s] not loaded: %s", m_Filepath, stbi_failure_reason()));
 
+            m_TextureData = buffer.array();
             int width = w.get(), height = h.get();
             generateTexture(width, height, buffer);
 
@@ -155,6 +163,10 @@ public class Texture {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buf);
         glGenerateMipmap(GL_TEXTURE_2D);
+    }
+
+    public byte[] getTextureData() {
+        return m_TextureData;
     }
 
     public int getTextureId() {

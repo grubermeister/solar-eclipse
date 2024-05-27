@@ -1,10 +1,11 @@
 package git.eclipse.client;
 
 import git.eclipse.client.audio.AudioMaster;
+import git.eclipse.client.util.ImGuiManager;
 import git.eclipse.client.util.input.Input;
-import git.eclipse.client.scene.MainScene;
+import git.eclipse.client.scene.scenes.MainScene;
 import git.eclipse.client.scene.SceneHandler;
-import git.eclipse.client.scene.TestScene;
+import git.eclipse.client.scene.scenes.TestScene;
 import git.eclipse.client.util.Window;
 import git.eclipse.client.graphics.RenderCmd;
 import git.eclipse.core.network.ClientData;
@@ -15,6 +16,18 @@ import static org.lwjgl.glfw.GLFW.*;
 
 public class EclipseClient implements Runnable {
 
+    private static EclipseClient ms_Instance;
+
+    public static int Width() {
+        if(ms_Instance == null) return -1;
+        return ms_Instance.m_Window.getWidth();
+    }
+
+    public static int Height() {
+        if(ms_Instance == null) return -1;
+        return ms_Instance.m_Window.getHeight();
+    }
+
     private final ClientData m_Data;
     private final Thread m_Thread;
 
@@ -23,6 +36,7 @@ public class EclipseClient implements Runnable {
 
     private String m_Title;
     private Window m_Window;
+    private ImGuiManager m_ImGui;
 
     private SceneHandler m_Scenes;
     private volatile boolean m_Running;
@@ -33,6 +47,7 @@ public class EclipseClient implements Runnable {
         m_Running = false;
 
         m_Thread = new Thread(this, "Main_Thread");
+        if(ms_Instance == null) ms_Instance = this;
     }
 
     public synchronized void start() {
@@ -57,6 +72,8 @@ public class EclipseClient implements Runnable {
 
     private void initialize() {
         AudioMaster.Init();
+        m_ImGui = new ImGuiManager();
+        m_ImGui.init(m_Window.getHandle(), "#version 440");
 
         m_Scenes.addScene("Test", new TestScene());
         m_Scenes.addScene("Main", new MainScene());
@@ -77,6 +94,7 @@ public class EclipseClient implements Runnable {
             if(!m_Window.shouldClose())
                 m_Window.close();
 
+            m_ImGui.dispose();
             AssetLoader.Dispose();
             if(m_ErrorCallback != null) {
                 m_ErrorCallback.free();
@@ -84,6 +102,8 @@ public class EclipseClient implements Runnable {
             }
 
             glfwTerminate();
+            ms_Instance = null;
+
             m_Thread.join(1);
             System.exit(0);
         } catch (InterruptedException e) {
@@ -131,7 +151,7 @@ public class EclipseClient implements Runnable {
                 accumulator -= optimal;
             }
 
-            m_Scenes.render();
+            m_Scenes.render(m_ImGui);
 
             m_Window.swapBuffers();
             glfwPollEvents();

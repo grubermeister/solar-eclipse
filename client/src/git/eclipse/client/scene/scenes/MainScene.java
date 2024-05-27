@@ -1,4 +1,6 @@
-package git.eclipse.client.scene;
+package git.eclipse.client.scene.scenes;
+
+import git.eclipse.client.scene.SceneAdapter;
 
 public class MainScene extends SceneAdapter {
 
@@ -20,6 +22,11 @@ public class MainScene extends SceneAdapter {
     @Override
     public void render() {
         // TODO: Render Code
+    }
+
+    @Override
+    public void imgui() {
+        // TODO: imgui Code
     }
 
     @Override
