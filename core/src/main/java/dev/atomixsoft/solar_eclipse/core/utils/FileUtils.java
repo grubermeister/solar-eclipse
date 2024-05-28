@@ -60,7 +60,6 @@ public class FileUtils {
 
                 br.close();
             } else {
-                System.out.println("Current working directory: " + System.getProperty("user.dir"));
                 InputStream is = new BufferedInputStream(Objects.requireNonNull(FileUtils.class.getResourceAsStream("/" + filePath)));
                 BufferedReader br = new BufferedReader(new InputStreamReader(is));
                 StringBuilder builder = new StringBuilder();
