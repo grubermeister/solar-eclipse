@@ -1,0 +1,47 @@
+plugins {
+    id 'application'
+}
+
+ext {
+    jomlVersion = "1.10.5"
+    lwjglVersion = "3.3.3"
+}
+
+def osName = System.getProperty("os.name").toLowerCase()
+def lwjglNatives = ""
+
+if (osName.contains("linux")) {
+    lwjglNatives = "natives-linux"
+} else if (osName.contains("mac")) {
+    lwjglNatives = "natives-macos"
+} else {
+    lwjglNatives = "natives-windows"
+}
+
+
+dependencies {
+    implementation project(':core')
+
+    implementation "org.joml:joml:$jomlVersion"
+    implementation "org.lwjgl:lwjgl:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-glfw:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-opengl:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-openal:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-stb:$lwjglVersion"
+
+    runtimeOnly "org.lwjgl:lwjgl:$lwjglVersion:$lwjglNatives"
+    runtimeOnly "org.lwjgl:lwjgl-glfw:$lwjglVersion:$lwjglNatives"
+    runtimeOnly "org.lwjgl:lwjgl-opengl:$lwjglVersion:$lwjglNatives"
+    runtimeOnly "org.lwjgl:lwjgl-openal:$lwjglVersion:$lwjglNatives"
+    runtimeOnly "org.lwjgl:lwjgl-stb:$lwjglVersion:$lwjglNatives"
+}
+
+application {
+    mainClass = 'dev.atomixsoft.solar_eclipse.client.Client'
+}
+
+tasks.named('run', JavaExec) {
+    group = 'application'
+    description = 'Runs the Solar Eclipse Client'
+    classpath = sourceSets.main.runtimeClasspath
+}

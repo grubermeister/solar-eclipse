@@ -1,0 +1,55 @@
+plugins {
+    id 'java'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+def dataDir = "${rootProject.projectDir}/data"
+
+allprojects {
+    group = 'dev.atomixsoft.solar_eclipse'
+    version = '0.2.3.1-alpha'
+
+    repositories {
+        mavenCentral()
+        maven {
+            url "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
+    }
+}
+
+subprojects {
+    apply plugin: 'java'
+
+    dependencies {
+        testImplementation platform('org.junit:junit-bom:5.10.0')
+        testImplementation 'org.junit.jupiter:junit-jupiter'
+    }
+
+    plugins.withId('application') {
+        tasks.named('run', JavaExec).configure {
+            doFirst {
+                standardInput = System.in
+                workingDir = file(dataDir)
+            }
+        }
+    }
+
+    tasks.withType(JavaExec).tap {
+        configureEach {
+            doFirst {
+                classpath = files(dataDir) + classpath
+                ignoreExitValue = true
+            }
+        }
+    }
+
+    tasks.withType(Test).tap {
+        configureEach {
+            useJUnitPlatform()
+        }
+    }
+}
