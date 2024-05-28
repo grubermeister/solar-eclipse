@@ -17,5 +17,8 @@ public class SceneAdapter extends SceneHandler.Scene {
     public void render() { }
 
     @Override
+    public void imgui() { }
+
+    @Override
     public void resize(int width, int height) { }
 }

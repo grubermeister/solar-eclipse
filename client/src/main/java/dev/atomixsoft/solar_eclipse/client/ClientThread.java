@@ -1,5 +1,6 @@
 package dev.atomixsoft.solar_eclipse.client;
 
+import dev.atomixsoft.solar_eclipse.client.util.ImGuiManager;
 import org.lwjgl.glfw.GLFWErrorCallback;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -26,6 +27,7 @@ public class ClientThread implements Runnable {
     private GLFWErrorCallback m_ErrorCallback;
     private Window m_Window;
     private SceneHandler m_Scenes;
+    private ImGuiManager m_GUIManager;
 
 
     public ClientThread(String title) {
@@ -57,6 +59,7 @@ public class ClientThread implements Runnable {
     }
 
     private void initialize() {
+        m_GUIManager.init(m_Window.getHandle(), "#version 130");
         AudioMaster.Init();
 
         m_Scenes.addScene("Test", new TestScene());
@@ -76,6 +79,7 @@ public class ClientThread implements Runnable {
             if(!m_Window.shouldClose())
                 m_Window.close();
 
+            m_GUIManager.dispose();
             AssetLoader.Dispose();
             if(m_ErrorCallback != null) {
                 m_ErrorCallback.free();
@@ -132,7 +136,7 @@ public class ClientThread implements Runnable {
                 accumulator -= optimal;
             }
 
-            m_Scenes.render();
+            m_Scenes.render(m_GUIManager);
             m_Window.swapBuffers();
             glfwPollEvents();
 
