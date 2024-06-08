@@ -12,7 +12,6 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 
 import dev.atomixsoft.solar_eclipse.core.game.Constants;
 
-import dev.atomixsoft.solar_eclipse.client.util.input.Input;
 import dev.atomixsoft.solar_eclipse.client.util.input.Controller;
 
 import dev.atomixsoft.solar_eclipse.client.AssetLoader;

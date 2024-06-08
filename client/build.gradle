@@ -43,6 +43,9 @@ dependencies {
     runtimeOnly "org.lwjgl:lwjgl-openal:$lwjglVersion:$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-stb:$lwjglVersion:$lwjglNatives"
 
+    runtimeOnly "io.github.spair:imgui-java-lwjgl3:$imguiVersion"
+    runtimeOnly "io.github.spair:imgui-java-$imguiNatives:$imguiVersion"
+
 }
 
 application {

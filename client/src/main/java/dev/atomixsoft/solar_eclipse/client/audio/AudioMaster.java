@@ -16,11 +16,13 @@ import dev.atomixsoft.solar_eclipse.client.audio.files.Wav;
  * A static class meant to load Music and Sound Effects for use with OpenAL. <br />
  * It will initially support only WAV for Sound and MIDI for Music.
  */
+@SuppressWarnings("unused")
 public class AudioMaster {
     private static AudioMaster ms_Instance = null;
 
     private final Map<String, Integer> m_BufferMap;
 
+    
     private ALCapabilities m_alCapabilities;
     private ALCCapabilities m_alcCapabilities;
 
