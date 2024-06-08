@@ -68,8 +68,8 @@ public class TestScene extends SceneAdapter{
         spriteList.add(sprite);
         batch = new SpriteBatch(AssetLoader.GetShader("basic"));
 
-        sfxBuffer = AudioMaster.LoadSound("sfxTest", "sound/Decision2.wav");
-        mscBuffer = AudioMaster.LoadMusic("mscTest", "music/reddwarf.mid");
+        sfxBuffer = AudioMaster.LoadSound("sfxTest", "client/assets/sound/Decision2.wav");
+        mscBuffer = AudioMaster.LoadMusic("mscTest", "client/assets/music/reddwarf.mid");
 
         sfxSource = new AudioSource();
         mscSrc = new AudioSource();

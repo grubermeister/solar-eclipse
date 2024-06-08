@@ -54,7 +54,7 @@ public class Client {
     }
 
     public static void main(String[] args) {
-        final Hashtable<String, String> configInfo = GetConfigInfo("config/client.ini");
+        final Hashtable<String, String> configInfo = GetConfigInfo("client/client.ini");
         final ClientThread eclipse = new ClientThread(configInfo.get(NAME_VAR));
 
         eclipse.start();
