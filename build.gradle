@@ -8,8 +8,6 @@ java {
 }
 
 ext {
-    slf4jVersion = "2.0.13"
-    log4jVersion = "2.23.1"
     junitVersion = "5.10.0"
 }
 
@@ -31,11 +29,6 @@ subprojects {
     apply plugin: 'java'
 
     dependencies {
-        implementation 'org.slf4j:slf4j-api:' + slf4jVersion
-        implementation 'org.apache.logging.log4j:log4j-core:' + log4jVersion
-        implementation 'org.apache.logging.log4j:log4j-api:' + log4jVersion
-        implementation 'org.apache.logging.log4j:log4j-slf4j-impl:' + log4jVersion
-
         testImplementation platform('org.junit:junit-bom:' + junitVersion)
         testImplementation 'org.junit.jupiter:junit-jupiter'
     }
@@ -43,17 +36,8 @@ subprojects {
     plugins.withId('application') {
         tasks.named('run', JavaExec).configure {
             doFirst {
-                standardInput = System.in
-                workingDir = file(dataDir)
-            }
-        }
-    }
-
-    tasks.withType(JavaExec).tap {
-        configureEach {
-            doFirst {
                 classpath = files(dataDir) + classpath
-                ignoreExitValue = true
+                workingDir = file(dataDir)
             }
         }
     }
