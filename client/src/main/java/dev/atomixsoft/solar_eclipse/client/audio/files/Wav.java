@@ -28,7 +28,8 @@ public class Wav {
     }
 
     private void load() {
-        int totalFramesRead = 0;
+        //int totalFramesRead = 0;
+        
         try {
             // Loads up an AudioInputStream and AudioFormat for file processing
             AudioInputStream ais = AudioSystem.getAudioInputStream(m_File);
@@ -47,7 +48,7 @@ public class Wav {
                 while ((numBytesRead = ais.read(buffer)) != -1) {
                     out.write(buffer, 0, numBytesRead);
                     //numFramesRead = numBytesRead / bytesPerFrame;
-                    totalFramesRead += numBytesRead / bytesPerFrame;
+                    //totalFramesRead += numBytesRead / bytesPerFrame;
                 }
 
                 m_Data = out.toByteArray();

@@ -14,16 +14,16 @@ import dev.atomixsoft.solar_eclipse.client.graphics.Texture;
 
 public class AssetLoader {
     // =========== INTERNAL DIRECTORIES ===========
-    private static final String TEXTURES_DIR = "graphics/";
-    private static final String SHADERS_DIR = "shaders/";
+    private static final String TEXTURES_DIR = "client/assets/graphics/";
+    private static final String SHADERS_DIR = "client/assets/shaders/";
 
-    private static final String SFX_DIR = "audio/sfx/";
-    private static final String BGM_DIR = "audio/bgm/";
+    // private static final String SFX_DIR = "audio/sfx/";
+    // private static final String BGM_DIR = "audio/bgm/";
     // =========== INTERNAL DIRECTORIES ===========
 
     // =========== EXTERNAL DIRECTORIES ===========
-    private static final String LOG_DIR = "logs/";
-    private static final String CACHED_MAPS_DIR = "maps/";
+    // private static final String LOG_DIR = "logs/";
+    // private static final String CACHED_MAPS_DIR = "maps/";
     // =========== EXTERNAL DIRECTORIES ===========
 
     private final Map<String, Texture> m_TextureMap;

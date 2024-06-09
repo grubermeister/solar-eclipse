@@ -35,6 +35,7 @@ public class ClientThread implements Runnable {
         m_Running = false;
 
         m_Thread = new Thread(this, "Main_Thread");
+        m_GUIManager = new ImGuiManager();
     }
 
     public synchronized void start() {

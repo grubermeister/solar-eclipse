@@ -7,11 +7,15 @@ java {
     targetCompatibility = JavaVersion.VERSION_17
 }
 
+ext {
+    junitVersion = "5.10.0"
+}
+
 def dataDir = "${rootProject.projectDir}/data"
 
 allprojects {
     group = 'dev.atomixsoft.solar_eclipse'
-    version = '0.2.3.1-alpha'
+    version = '0.3.1.1-alpha'
 
     repositories {
         mavenCentral()
@@ -25,26 +29,21 @@ subprojects {
     apply plugin: 'java'
 
     dependencies {
-        testImplementation platform('org.junit:junit-bom:5.10.0')
+        testImplementation platform('org.junit:junit-bom:' + junitVersion)
         testImplementation 'org.junit.jupiter:junit-jupiter'
     }
 
     plugins.withId('application') {
         tasks.named('run', JavaExec).configure {
             doFirst {
-                standardInput = System.in
+                classpath = files(dataDir) + classpath
                 workingDir = file(dataDir)
             }
         }
     }
 
-    tasks.withType(JavaExec).tap {
-        configureEach {
-            doFirst {
-                classpath = files(dataDir) + classpath
-                ignoreExitValue = true
-            }
-        }
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
     }
 
     tasks.withType(Test).tap {

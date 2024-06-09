@@ -1,3 +1,45 @@
+plugins {
+    id 'application'
+}
+
+def dataDir = "${rootProject.projectDir}/data"
+
+application {
+    mainClass = 'dev.atomixsoft.solar_eclipse.editor.Editor'
+}
+
 dependencies {
     implementation project(':core')
+}
+
+task debug(type: JavaExec) {
+    doFirst {
+        classpath = files(dataDir) + sourceSets.main.runtimeClasspath
+        workingDir = file(dataDir)
+
+        println "Classpath is set to ${classpath.asPath}"
+        println "Working directory is $workingDir"
+    }
+
+    group = 'application'
+    description = 'Runs the Solar Eclipse Editor in debug mode'
+
+    standardInput = System.in
+
+    mainClass = application.mainClass.get()
+    
+    jvmArgs = [
+        "-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5006"
+    ]
+    ignoreExitValue = true
+
+    doLast {
+        logging.level = LogLevel.INFO
+        println "Debugging Solar Eclipse Editor..."
+    }
+}
+
+tasks.named('run', JavaExec) {
+    group = 'application'
+    description = 'Runs the Solar Eclipse Editor'
 }
