@@ -11,62 +11,63 @@ public class Camera {
 
 
     protected Camera() {
-        m_View = new Matrix4f();
-        m_Projection = new Matrix4f();
-        m_Combined = new Matrix4f();
+        this.m_View = new Matrix4f();
+        this.m_Projection = new Matrix4f();
+        this.m_Combined = new Matrix4f();
+        this.m_Position = new Vector3f(0.0f);
+        this.m_Rotation = new Vector3f(0.0f);
+        this.m_Scale = new Vector3f(1.0f);
 
-        m_Position = new Vector3f(0.0f);
-        m_Rotation = new Vector3f(0.0f);
-        m_Scale = new Vector3f(1.0f);
-        m_Zoom = 1.0f;
+        this.m_Zoom = 1.0f;
     }
 
     public void setPosition(Vector3f position) {
-        m_Position.set(position);
+        this.m_Position.set(position);
     }
 
     public void setRotation(Vector3f rotation) {
-        m_Rotation.set(rotation);
+        this.m_Rotation.set(rotation);
     }
 
     public void setScale(Vector3f scale) {
-        m_Scale.set(scale);
+        this.m_Scale.set(scale);
     }
 
     public void setScale(float scalar) {
-        setScale(new Vector3f(scalar));
+        this.setScale(new Vector3f(scalar));
     }
 
     public void setZoom(float zoom) {
-        m_Zoom = zoom;
+        this.m_Zoom = zoom;
     }
 
     public Vector3f getPosition() {
-        return m_Position;
+        return this.m_Position;
     }
 
     public Vector3f getRotation() {
-        return m_Rotation;
+        return this.m_Rotation;
     }
 
     public Vector3f getScale() {
-        return m_Scale;
+        return this.m_Scale;
     }
 
     public float getZoom() {
-        return m_Zoom;
+        return this.m_Zoom;
     }
 
     public Matrix4f getView() {
-        return m_View;
+        return this.m_View;
     }
 
     public Matrix4f getProjection() {
-        return m_Projection;
+        return this.m_Projection;
     }
 
     public Matrix4f getCombined() {
-        m_Combined.set(getView()).mul(getProjection());
-        return m_Combined;
+        this.m_Combined.set(getView()).mul(getProjection());
+
+        return this.m_Combined;
     }
 }

@@ -2,11 +2,12 @@
 
 > Welcome to _**Eclipse Origins 4**_, a love letter to Visual Basic 2D ORPG Engines. 
 
-&emsp; This build, nicknamed _Solar Eclipse_, is version `0.2.3.1-alpha`.
+&emsp; This build, nicknamed _Solar Eclipse_, is version `4.3.1.1-alpha`.
 
 
 ## Table of Contents
 - [Requirements](#requirements)
+- [Project Overview](#project-overview)
 - [Sub-projects](#sub-projects)
   - [Core](#core)
   - [Server](#server)
@@ -18,11 +19,11 @@
   - [Clean and Build Server](#clean-and-build-server)
   - [Clean and Build Editor](#clean-and-build-editor)
   - [Clean and Build Client](#clean-and-build-client)
-  - [Running Server](#running-server)
-  - [Running Editor](#running-editor)
-  - [Running Client](#running-client)
 - [Execution](#execution)
-- [Project Overview](#project-overview)
+  - [Running the Server](#running-the-server)
+  - [Running the Editor](#running-the-editor)
+  - [Running the Client](#running-the-client)
+- [Distribution](#distribution)
 - [Errata](#errata)
 
 
@@ -31,7 +32,31 @@
 - * OpenJDK "Temurin" version 21-0.3+9 (Eclipse Adoptium JRE)
 - **Built with:** Gradle 8.5 (Groovy configuration)
 
-Currently only tested on Windows 10 & 11
+
+
+Currently only tested on Windows 10 & 11.
+
+
+## Project Overview
+
+Version strings follow the **MAJOR**(#?).**MODEL**(#??).**CONTROLLER**(#??).**VIEW**(#??)-**MILESTONE** format.  
+
+So, Solar Eclipse (`v4`) is currently using Model `v3`, Controller `v1`, View `v1`, and is in its `alpha` milestone.
+
+The project's packages and modules exist within the `dev.atomixsoft.solar_eclipse` namespace.  The only module is `core` - `server`, `editor`, and `client` sub-projects are comprised of a series of packages.
+
+| **Module**      | **Package**     | **Description** |
+| ---------------------------------------- | ---------------------------------------- | -------------------------------------------------------------------------------- |
+| _Core_ | _Game_ | _TODO_ |
+| _Core_ | _Utils_ | _TODO_ |
+| _Core_ | _Network_ | _TODO_ |
+| _N/A_ | _Server_ | _TODO_ |
+| _N/A_ | _Editor_ | _TODO_ |
+| _N/A_ | _Client_ | _TODO_ |
+| _N/A_ | _ClientAudio_ | _TODO_ |
+| _N/A_ | _ClientGraphics_ | _TODO_ |
+| _N/A_ | _ClientScene_ | _TODO_ |
+| _N/A_ | _ClientUtil_ | _TODO_ |
 
 
 ## Sub-projects
@@ -105,49 +130,56 @@ To clean & build only the `client` sub-project, execute the following:
 ./gradlew :client:build
 ```
 
-### Running Server
+
+## Execution
+
+### Running the Server
+
 You must run the `server` sub-project before `editor` or `client`.
 
-To run the `server` sub-project, execute the following:
+To run the `server`, execute the following:
 ```sh
 ./gradlew :server:run
 ```
 
-### Running Editor
-To run the `editor` sub-project, execute the following:
+To run `server` in debug mode, execute the following instead:
 ```sh
-./gradlew :server:run
+./gradlew :server:debug
 ```
 
-### Running Client
-To run the `client` sub-project, execute the following:
+### Running the Editor
+
+To run the `editor`, execute the following:
+```sh
+./gradlew :editor:run
+```
+
+To run `editor` in debug mode, execute the following instead:
+```sh
+./gradlew :editor:debug
+```
+
+### Running the Client
+
+To run the `client`, execute the following:
 ```sh
 ./gradlew :client:run
 ```
 
+To run `client` in debug mode, execute the following instead:
+```sh
+./gradlew :client:debug
+```
 
-## Execution
+
+## Distribution
 | _TODO_
 
 
-## Project Overview
-The project's packages and modules exist within the `dev.atomixsoft.solar_eclipse` namespace.  The only module is `core` - `server`, `editor`, and `client` sub-projects are comprised of a series of packages.
-
-| **Module**      | **Package**     | **Description** |
-| ---------------------------------------- | ---------------------------------------- | -------------------------------------------------------------------------------- |
-| _Core_ | _Game_ | _TODO_ |
-| _Core_ | _Utils_ | _TODO_ |
-| _Core_ | _Network_ | _TODO_ |
-| _N/A_ | _Server_ | _TODO_ |
-| _N/A_ | _Editor_ | _TODO_ |
-| _N/A_ | _Client_ | _TODO_ |
-| _N/A_ | _ClientAudio_ | _TODO_ |
-| _N/A_ | _ClientGraphics_ | _TODO_ |
-| _N/A_ | _ClientScene_ | _TODO_ |
-| _N/A_ | _ClientUtil_ | _TODO_ |
-
-
 ## Errata
+
+Current planned Milestones are `alpha`, `beta`, `rc1`, `rc2`, and `rtm`.  
+
 For a little background, take a look at these links:
 - [Eclipse - Free MMORPG Maker - Index](https://web.archive.org/web/20110901224553/http://www.touchofdeathforums.com/smf/index.php)
 - [Forums - Eclipse Origins](https://forum.eclipseorigins.com/)
