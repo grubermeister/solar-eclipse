@@ -22,8 +22,9 @@ public class OrthoCamera extends Camera {
         float zoom = getZoom();
 
         m_View.identity();
+        //m_View.translate(-position.x, -position.y, -position.z);
+        m_View.translate(position.x, position.y, 0.0f);
         m_View.rotate(rotation);
-        m_View.translate(-position.x, -position.y, -position.z);
         m_View.scale(zoom, zoom, 1.0f);
     }
 
@@ -38,6 +39,7 @@ public class OrthoCamera extends Camera {
 
         m_Projection.identity();
         m_Projection.ortho(-width / m_AspectRatio, width / m_AspectRatio, -height / m_AspectRatio, height / m_AspectRatio, -1.0f, 1.0f);
+        //m_Projection.ortho(0.0f, width, 0.0f, height, -1.0f, 1.0f);
     }
 
     public float getAspectRatio() {

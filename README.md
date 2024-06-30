@@ -65,8 +65,8 @@ The project's packages and modules exist within the `dev.atomixsoft.solar_eclips
 The `core` sub-project includes essential libraries and classes shared across the other sub-projects.
 
 | **Dependencies**:
-- [slf4j 2.0.13](https://www.slf4j.org/)
-- * [log4j 2.23.1](https://logging.apache.org/log4j/2.x/)
+- [apache-commons-configuration 2.10.1](https://commons.apache.org/proper/commons-configuration/)
+- [apache-commons-logging 1.3.2](https://commons.apache.org/proper/commons-logging/)
 - [junit-jupiter 5.10.0](https://junit.org/junit5/)
 
 ### Server

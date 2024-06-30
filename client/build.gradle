@@ -56,6 +56,9 @@ application {
 
 task debug(type: JavaExec) {
     doFirst {
+        gradle.startParameter.showStacktrace = ShowStacktrace.ALWAYS
+        gradle.startParameter.logLevel = LogLevel.DEBUG
+
         classpath = files(dataDir) + sourceSets.main.runtimeClasspath
         workingDir = file(dataDir)
 
@@ -74,11 +77,6 @@ task debug(type: JavaExec) {
         "-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5007"
     ]
     ignoreExitValue = true
-
-    doLast {
-        logging.level = LogLevel.INFO
-        println "Debugging Solar Eclipse Client..."
-    }
 }
 
 tasks.named('run', JavaExec) {
