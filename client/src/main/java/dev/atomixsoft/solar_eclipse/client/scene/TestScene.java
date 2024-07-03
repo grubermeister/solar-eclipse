@@ -92,8 +92,12 @@ public class TestScene extends SceneAdapter{
 
         camera.setZoom(zoom);
 
-        if(input.justPressed("music"))
-            mscSrc.start(mscBuffer);
+        if(input.justPressed("music")) {
+            if(mscSrc.isPlaying())
+                mscSrc.stop();
+            else
+                mscSrc.start(mscBuffer);
+        }
 
         if(input.justPressed("sound"))
             sfxSource.start(sfxBuffer);
