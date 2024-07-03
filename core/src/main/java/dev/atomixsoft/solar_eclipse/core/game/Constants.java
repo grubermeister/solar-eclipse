@@ -41,12 +41,28 @@ public class Constants {
 
     // Map Constants
     public static final long MAX_MAPS = 100;
-    public static final byte MAX_MAPX = 20;
-    public static final byte MAX_MAPY = 20;
+    public static final int MAX_MAP_LAYERS = 10;
 
-    // Map Morals
     public static final byte MAP_MORAL_NONE = 0;
     public static final byte MAP_MORAL_SAFE = 1;
+    public static final byte MAP_MORAL_ARENA = 2;
+
+    // Tile constants
+    public static byte TILE_TYPE_WALKABLE = 0;
+    public static byte TILE_TYPE_BLOCKED = 1;
+    public static byte TILE_TYPE_WARP = 2;
+    public static byte TILE_TYPE_ITEM = 3;
+    public static byte TILE_TYPE_NPCAVOID = 4;
+    public static byte TILE_TYPE_KEY = 5;
+    public static byte TILE_TYPE_KEYOPEN = 6;
+    public static byte TILE_TYPE_RESOURCE = 7;
+    public static byte TILE_TYPE_DOOR = 8;
+    public static byte TILE_TYPE_NPCSPAWN = 9;
+    public static byte TILE_TYPE_SHOP = 10;
+    public static byte TILE_TYPE_BANK = 11;
+    public static byte TILE_TYPE_HEAL = 12;
+    public static byte TILE_TYPE_TRAP = 13;
+    public static byte TILE_TYPE_SLIDE = 14;
 
     // Item Constants
     public static final byte ITEM_TYPE_NONE = 0;
@@ -58,4 +74,5 @@ public class Constants {
     public static final byte ITEM_TYPE_KEY = 6;
     public static final byte ITEM_TYPE_CURRENCY = 7;
     public static final byte ITEM_TYPE_SPELL = 8;
+
 }

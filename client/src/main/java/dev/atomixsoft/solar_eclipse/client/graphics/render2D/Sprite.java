@@ -82,8 +82,16 @@ public class Sprite {
         m_Scale = scale;
     }
 
+    public void setCellPos(float x, float y) {
+        setCellPos(new Vector2f(x, y));
+    }
+
     public void setCellPos(Vector2f cellPos) {
         m_CellPos.set(cellPos);
+    }
+
+    public void setCellSize(float width, float height) {
+        setCellSize(new Vector2f(width, height));
     }
 
     public void setCellSize(Vector2f cellSize) {

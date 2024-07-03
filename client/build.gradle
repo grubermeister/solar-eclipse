@@ -75,13 +75,14 @@ task debug(type: JavaExec) {
     ]
     ignoreExitValue = true
 
-    doLast {
-        logging.level = LogLevel.INFO
-        println "Debugging Solar Eclipse Client..."
-    }
+    //doLast {
+    //    logging.level = LogLevel.INFO
+    //    println "Debugging Solar Eclipse Client..."
+    //}
 }
 
 tasks.named('run', JavaExec) {
     group = 'application'
     description = 'Runs the Solar Eclipse Client'
+    ignoreExitValue = true
 }

@@ -115,7 +115,6 @@ public class ClientThread implements Runnable {
 
         Input input = Input.Instance();
         while(m_Running) {
-            RenderCmd.Clear();
             if(m_Window.shouldClose()) {
                 stop();
                 continue;
@@ -137,6 +136,7 @@ public class ClientThread implements Runnable {
                 accumulator -= optimal;
             }
 
+            RenderCmd.Clear();
             m_Scenes.render(m_GUIManager);
             m_Window.swapBuffers();
             glfwPollEvents();
