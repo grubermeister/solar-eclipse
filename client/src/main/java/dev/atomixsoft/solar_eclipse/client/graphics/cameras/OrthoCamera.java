@@ -9,7 +9,6 @@ public class OrthoCamera extends Camera {
     private float m_AspectRatio;
     private float m_Width, m_Height;
 
-
     public OrthoCamera(float width, float height) {
         super();
 
@@ -38,8 +37,7 @@ public class OrthoCamera extends Camera {
             this.m_AspectRatio = m_Height / m_Width;
 
         m_Projection.identity();
-        m_Projection.ortho(-width / m_AspectRatio, width / m_AspectRatio, -height / m_AspectRatio, height / m_AspectRatio, -1.0f, 1.0f);
-        //m_Projection.ortho(0.0f, width, 0.0f, height, -1.0f, 1.0f);
+        m_Projection.ortho(-m_Width / m_AspectRatio, m_Width / m_AspectRatio, -m_Height / m_AspectRatio, m_Height / m_AspectRatio, -1.0f, 1.0f);
     }
 
     public float getAspectRatio() {

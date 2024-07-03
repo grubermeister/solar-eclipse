@@ -124,7 +124,7 @@ public class SpriteBatch {
         int ebo = glCreateBuffers();
         m_VBOList.add(ebo);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, (m_Size * 6L) * Integer.BYTES, GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, (m_Size * 6L) * Integer.BYTES, GL_DYNAMIC_DRAW);
         glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, m_Indices);
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -150,8 +150,7 @@ public class SpriteBatch {
         glCullFace(GL_BACK);
 
         m_BatchShader.bind();
-        Matrix4f combinedMatrix = camera.getCombined();
-        m_BatchShader.setUniformMat4("u_ViewProjection", combinedMatrix);
+        m_BatchShader.setUniformMat4("u_ViewProjection", camera.getCombined());
 
         m_Rendering = true;
         startBatch();
@@ -222,8 +221,11 @@ public class SpriteBatch {
         glDeleteVertexArrays(m_VAO);
         m_VBOList.forEach(GL15::glDeleteBuffers);
 
-        MemoryUtil.memFree(m_Vertices);
-        MemoryUtil.memFree(m_Indices);
+        if(m_Vertices != null)
+            MemoryUtil.memFree(m_Vertices);
+
+        if(m_Indices != null)
+            MemoryUtil.memFree(m_Indices);
 
         m_BatchShader.dispose();
         m_WhiteTexture.dispose();

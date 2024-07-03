@@ -1,14 +1,10 @@
 package dev.atomixsoft.solar_eclipse.client.scene;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.joml.Math;
-import org.joml.Vector2f;
+import dev.atomixsoft.solar_eclipse.client.graphics.GameRenderer;
+import dev.atomixsoft.solar_eclipse.core.game.Actuator;
+import dev.atomixsoft.solar_eclipse.core.game.map.GameMap;
+import dev.atomixsoft.solar_eclipse.core.game.map.Tile;
 import org.joml.Vector3f;
-
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_P;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 
 import dev.atomixsoft.solar_eclipse.core.game.Constants;
 
@@ -16,66 +12,67 @@ import dev.atomixsoft.solar_eclipse.client.util.input.Controller;
 
 import dev.atomixsoft.solar_eclipse.client.AssetLoader;
 
-import dev.atomixsoft.solar_eclipse.client.graphics.render2D.Sprite;
 import dev.atomixsoft.solar_eclipse.client.graphics.render2D.SpriteBatch;
 import dev.atomixsoft.solar_eclipse.client.graphics.cameras.OrthoCamera;
-import dev.atomixsoft.solar_eclipse.client.audio.AudioMaster;
-import dev.atomixsoft.solar_eclipse.client.audio.AudioSource;
+
+import static org.lwjgl.glfw.GLFW.*;
 
 
 public class TestScene extends SceneAdapter{
-    private int sfxBuffer, mscBuffer;
 
-    private List<Sprite> spriteList;
     private OrthoCamera camera;
     private SpriteBatch batch;
-    private AudioSource mscSrc, sfxSource;
     private Controller input;
+    private GameRenderer mapRender;
 
+    int mapSize = 10;
 
     @Override
     public void show() {
-        spriteList = new ArrayList<>();
         input = new Controller();
+        mapRender = new GameRenderer();
 
-        input.addBinding("music", GLFW_KEY_P);
-        input.addBinding("sound", GLFW_KEY_SPACE);
+        input.addBinding("camUp", GLFW_KEY_UP);
+        input.addBinding("camDown", GLFW_KEY_DOWN);
+        input.addBinding("camLeft", GLFW_KEY_LEFT);
+        input.addBinding("camRight", GLFW_KEY_RIGHT);
 
-        camera = new OrthoCamera(600, 400);
+        camera = new OrthoCamera(800, 600);
+
+        Vector3f pos = camera.getPosition();
+        pos.x = (camera.getWidth() - 16) / camera.getAspectRatio();
+        pos.y = (camera.getHeight() - 16) / camera.getAspectRatio();
+        camera.setPosition(pos);
 
         AssetLoader.AddShader("basic", "basic");
 
         AssetLoader.AddTexture("tileset1", "tilesets/1.bmp");
         AssetLoader.AddTexture("tileset2", "tilesets/2.bmp");
 
-        for(int y = Constants.MAX_MAPY; y > -Constants.MAX_MAPY; --y) {
-            for(int x = -Constants.MAX_MAPX; x < Constants.MAX_MAPX; ++x) {
-                Sprite sprite = new Sprite(AssetLoader.GetTexture("tileset1"));
-                sprite.setPosition(x * 32, y * 32, 0);
-                sprite.setSize(32, 32);
-
-                sprite.setCellPos(new Vector2f(0, 32));
-                sprite.setCellSize(new Vector2f(32, 32));
-                spriteList.add(sprite);
-            }
-        }
-
-        Sprite sprite = new Sprite(AssetLoader.GetTexture("tileset2"));
-        sprite.setSize(32, 32);
-        sprite.setCellPos(new Vector2f(32, 32 * 6));
-        sprite.setCellSize(new Vector2f(32, 32));
-
-        spriteList.add(sprite);
         batch = new SpriteBatch(AssetLoader.GetShader("basic"));
 
-        sfxBuffer = AudioMaster.LoadSound("sfxTest", "client/assets/sound/Decision2.wav");
-        mscBuffer = AudioMaster.LoadMusic("mscTest", "client/assets/music/reddwarf.mid");
+        GameMap testMap = new GameMap(0, 0, 20, 20);
 
-        sfxSource = new AudioSource();
-        mscSrc = new AudioSource();
+        Tile grassTile = new Tile();
+        grassTile.textureId = 1;
+        grassTile.textureX = 0;
+        grassTile.textureY = 1;
 
-        sfxSource.setVolume(25);
-        mscSrc.setVolume(10);
+        grassTile.type = Constants.TILE_TYPE_WALKABLE;
+        grassTile.roof = false;
+
+        Tile trunkTile = new Tile(grassTile);
+        trunkTile.textureX = 4;
+        trunkTile.textureY = 0;
+        trunkTile.type = Constants.TILE_TYPE_BLOCKED;
+
+        Actuator.FillMapLayer(testMap, grassTile, 0);
+
+        Actuator.AddTileToMap(testMap, trunkTile, 1, 2, 2);
+        Actuator.AddTileToMap(testMap, trunkTile, 1, 10, 8);
+        Actuator.AddTileToMap(testMap, trunkTile, 1, 10, 13);
+
+        mapRender.setMap(testMap);
     }
 
     @Override
@@ -85,82 +82,35 @@ public class TestScene extends SceneAdapter{
 
     @Override
     public void update(double dt) {
-        float zoom = camera.getZoom();
-        zoom += 0.5f * (float) dt;
+        Vector3f position = camera.getPosition();
 
-        zoom = Math.clamp(1.0f, 1.75f, zoom);
+        float cameraSpeed = 300; // Adjust this as needed
 
-        camera.setZoom(zoom);
+        // Example control: move the camera with arrow keys
+        if (input.isPressed("camUp"))
+            position.y += cameraSpeed * dt;
+        else if (input.isPressed("camDown"))
+            position.y -= cameraSpeed * dt;
 
-        if(input.justPressed("music")) {
-            if(mscSrc.isPlaying())
-                mscSrc.stop();
-            else
-                mscSrc.start(mscBuffer);
-        }
+        if (input.isPressed("camLeft"))
+            position.x -= cameraSpeed * dt;
+        else if (input.isPressed("camRight"))
+            position.x += cameraSpeed * dt;
 
-        if(input.justPressed("sound"))
-            sfxSource.start(sfxBuffer);
-
-        Sprite sprite = spriteList.get(spriteList.size()-1);
-        Vector3f pos = sprite.getPosition();
-
-        sprite.setPosition(pos.x, pos.y, pos.z);
+        camera.setPosition(position);
     }
 
     @Override
     public void render() {
         batch.begin(camera);
 
-        float width = camera.getWidth(), height = camera.getHeight();
-        float aspectRatio = camera.getAspectRatio();
-        float zoom = camera.getZoom();
-
-        for(Sprite sprite : spriteList) {
-            Vector2f pos = new Vector2f(sprite.getPosition().x, sprite.getPosition().y);
-
-            if(pos.x - sprite.getSize().x / 2.0f > (width / aspectRatio) * zoom)
-                continue;
-            else if(pos.x + sprite.getSize().x / 2.0f < (-width / aspectRatio) * zoom)
-                continue;
-
-            if(pos.y - sprite.getSize().y / 2.0f > (height / aspectRatio) * zoom)
-                continue;
-            else if(pos.y + sprite.getSize().y / 2.0f < (-height / aspectRatio) * zoom)
-                continue;
-
-
-            sprite.draw(batch);
-        }
+        mapRender.render(batch);
 
         batch.end();
     }
 
     @Override
-    public void resize(int width, int height) {
-        int aspectRatio = 4 / 3;
-
-        int w, h;
-        if(width > height) {
-            w = width * aspectRatio;
-            h = height / aspectRatio;
-        } else {
-            w = width / aspectRatio;
-            h = height * aspectRatio;
-        }
-
-        camera.resize(w, h);
-    }
-
-    @Override
     public void dispose() {
-        mscSrc.dispose();
-
-        if(spriteList != null) {
-            spriteList.clear();
-            spriteList = null;
-        }
-
         if(batch != null)
             batch.dispose();
     }
