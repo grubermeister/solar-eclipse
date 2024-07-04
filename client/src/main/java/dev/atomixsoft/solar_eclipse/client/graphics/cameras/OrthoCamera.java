@@ -21,8 +21,9 @@ public class OrthoCamera extends Camera {
         float zoom = getZoom();
 
         m_View.identity();
+        //m_View.translate(-position.x, -position.y, -position.z);
+        m_View.translate(position.x, position.y, 0.0f);
         m_View.rotate(rotation);
-        m_View.translate(-position.x, -position.y, -position.z);
         m_View.scale(zoom, zoom, 1.0f);
     }
 

@@ -1,5 +1,7 @@
 package dev.atomixsoft.solar_eclipse.client;
 
+import dev.atomixsoft.solar_eclipse.client.logging.Logger;
+
 import dev.atomixsoft.solar_eclipse.client.util.ImGuiManager;
 import org.lwjgl.glfw.GLFWErrorCallback;
 
@@ -20,6 +22,7 @@ import dev.atomixsoft.solar_eclipse.client.scene.TestScene;
 
 public class ClientThread implements Runnable {
     private final Thread m_Thread;
+    private final Logger logger;
 
     private volatile boolean m_Running;
 
@@ -30,12 +33,13 @@ public class ClientThread implements Runnable {
     private ImGuiManager m_GUIManager;
 
 
-    public ClientThread(String title) {
+    public ClientThread(String title, Logger logger) {
         m_Title = title;
         m_Running = false;
 
-        m_Thread = new Thread(this, "Main_Thread");
-        m_GUIManager = new ImGuiManager();
+        this.m_Thread = new Thread(this, "Main_Thread");
+        this.logger = logger;
+        this.m_GUIManager = new ImGuiManager();
     }
 
     public synchronized void start() {
@@ -44,7 +48,7 @@ public class ClientThread implements Runnable {
 
         m_ErrorCallback = GLFWErrorCallback.createPrint(System.err);
         if(!glfwInit()) {
-            System.err.println("Failed to initialize GLFW!");
+            this.logger.error("Failed to initialize GLFW!");
             throw new RuntimeException("Failed to initialize the program!");
         }
 
@@ -71,6 +75,8 @@ public class ClientThread implements Runnable {
     }
 
     private void dispose() {
+        this.logger.debug("Client thread cleaning up...");
+
         AudioMaster.CleanUp();
 
         try {
@@ -89,6 +95,8 @@ public class ClientThread implements Runnable {
 
             glfwTerminate();
             m_Thread.join(1);
+
+            this.logger.debug("Client thread terminated.");
             System.exit(0);
         } catch (InterruptedException e) {
             System.err.println(e.getMessage());
@@ -98,6 +106,8 @@ public class ClientThread implements Runnable {
 
     @Override
     public void run() {
+        this.logger.debug("Client thread running...");
+
         m_Window = new Window(m_Title, 800, 600);
         m_Window.show();
 

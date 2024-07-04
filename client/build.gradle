@@ -56,6 +56,9 @@ application {
 
 task debug(type: JavaExec) {
     doFirst {
+        gradle.startParameter.showStacktrace = ShowStacktrace.ALWAYS
+        gradle.startParameter.logLevel = LogLevel.DEBUG
+
         classpath = files(dataDir) + sourceSets.main.runtimeClasspath
         workingDir = file(dataDir)
 

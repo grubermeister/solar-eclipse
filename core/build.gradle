@@ -1,16 +1,17 @@
 ext {
     accVersion = "2.10.1"
-    slf4jVersion = "2.0.13"
+    aclVersion = "1.3.2"
     log4jVersion = "2.23.1"
-    beanUtilVersion = "1.9.4"
+    disruptorVersion = "4.0.0"
+    beanUtilsVersion = "1.9.4"
 }
 
 dependencies { 
-    implementation 'org.apache.commons:commons-configuration2:' + accVersion
-    implementation 'commons-beanutils:commons-beanutils:' + beanUtilVersion
-
-    implementation 'org.slf4j:slf4j-api:' + slf4jVersion
-    implementation 'org.apache.logging.log4j:log4j-core:' + log4jVersion
-    implementation 'org.apache.logging.log4j:log4j-api:' + log4jVersion
-    implementation 'org.apache.logging.log4j:log4j-slf4j-impl:' + log4jVersion
+  implementation 'org.apache.commons:commons-configuration2:' + accVersion
+  implementation 'commons-logging:commons-logging:' + aclVersion
+  implementation 'commons-beanutils:commons-beanutils:' + beanUtilsVersion
+  implementation 'com.lmax:disruptor:' + disruptorVersion
+  implementation 'org.apache.logging.log4j:log4j-core:' + log4jVersion
+  implementation 'org.apache.logging.log4j:log4j-api:' + log4jVersion
+  implementation 'org.apache.logging.log4j:log4j-jcl:' + log4jVersion
 }
