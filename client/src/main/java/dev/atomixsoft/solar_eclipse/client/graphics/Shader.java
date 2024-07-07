@@ -17,7 +17,8 @@ import dev.atomixsoft.solar_eclipse.core.utils.FileUtils;
 
 
 /**
- * <p>Everything related to OpenGL Shaders can be found here. This class is what you'll use to create, bind, and dispose of the Shaders you'll use to render.</p>
+ * <p>Everything related to OpenGL Shaders can be found here. 
+ *    This class is what you'll use to create, bind, and dispose of the Shaders you'll use to render.</p>
  */
 public class Shader {
     private final Map<String, Integer> m_UniformMap;
@@ -37,9 +38,11 @@ public class Shader {
         List<Integer> shaderModules = new ArrayList<>();
 
         if(internal)
-            shaderModulesDataList.forEach(s -> shaderModules.add(createShader(FileUtils.StringFromFile(s.shaderFile), s.shaderType)));
+            shaderModulesDataList.forEach(s -> shaderModules.add(createShader(FileUtils.StringFromFile(s.shaderFile),
+                                                                              s.shaderType)));
         else
-            shaderModulesDataList.forEach(s -> shaderModules.add(createShader(FileUtils.readFile(s.shaderFile), s.shaderType)));
+            shaderModulesDataList.forEach(s -> shaderModules.add(createShader(FileUtils.readFile(s.shaderFile),
+                                                                              s.shaderType)));
 
         link(shaderModules);
     }
@@ -124,10 +127,9 @@ public class Shader {
 
     public void validate() {
         glValidateProgram(m_ProgramId);
-        if(glGetProgrami(m_ProgramId, GL_VALIDATE_STATUS) == GL_FALSE) {
-            System.err.println(glGetProgramInfoLog(m_ProgramId, 1024));
-            throw new RuntimeException("Error validating Shader Program!");
-        }
+        if(glGetProgrami(m_ProgramId, GL_VALIDATE_STATUS) == GL_FALSE)
+            throw new RuntimeException("Error validating Shader Program: \n" + 
+                                        glGetProgramInfoLog(m_ProgramId, 1024) + "!");
     }
 
     protected int createShader(String shaderSource, int shaderType) {
@@ -137,10 +139,9 @@ public class Shader {
 
         glShaderSource(shaderId, shaderSource);
         glCompileShader(shaderId);
-        if(glGetShaderi(shaderId, GL_COMPILE_STATUS) == GL_FALSE) {
-            System.err.println(glGetShaderInfoLog(shaderId, 1024));
-            throw new RuntimeException("Failed to compile shader: " + shaderType);
-        }
+        if(glGetShaderi(shaderId, GL_COMPILE_STATUS) == GL_FALSE)
+            throw new RuntimeException("Failed to compile shader '" + shaderType + "': \n" + 
+                                        glGetShaderInfoLog(shaderId, 1024) + "!");
 
         glAttachShader(m_ProgramId, shaderId);
         return shaderId;
@@ -148,10 +149,9 @@ public class Shader {
 
     private void link(List<Integer> shaderModules) {
         glLinkProgram(m_ProgramId);
-        if(glGetProgrami(m_ProgramId, GL_LINK_STATUS) == GL_FALSE) {
-            System.err.println(glGetProgramInfoLog(m_ProgramId, 1024));
-            throw new RuntimeException("Error linking Shader Program!");
-        }
+        if(glGetProgrami(m_ProgramId, GL_LINK_STATUS) == GL_FALSE)
+            throw new RuntimeException("Error linking Shader Program: \n" + 
+                                        glGetProgramInfoLog(m_ProgramId, 1024) + "!");
 
         shaderModules.forEach(s -> glDetachShader(m_ProgramId, s));
         shaderModules.forEach(GL30::glDeleteShader);

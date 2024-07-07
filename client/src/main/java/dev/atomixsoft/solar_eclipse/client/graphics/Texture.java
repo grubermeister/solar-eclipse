@@ -103,8 +103,7 @@ public class Texture {
 
                     buffer = stbi_load_from_memory(imageData, w, h, channels, 4);
                 } catch (IOException e) {
-                    System.err.println(e.getMessage());
-                    throw new RuntimeException();
+                    throw new RuntimeException(e.getMessage());
                 } finally {
                     if(imageData != null)
                         MemoryUtil.memFree(imageData);

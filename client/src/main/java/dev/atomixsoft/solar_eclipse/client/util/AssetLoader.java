@@ -1,4 +1,4 @@
-package dev.atomixsoft.solar_eclipse.client;
+package dev.atomixsoft.solar_eclipse.client.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,24 +45,44 @@ public class AssetLoader {
         Instance().dispose();
     }
 
-    public static void AddTexture(String name, String path) {
-        Instance().addTexture(name, path);
+    public static void AddTexture(String name, String path) throws Exception {
+        try {
+            Instance().addTexture(name, path);
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
-    public static void AddShader(String name, String shaderFile) {
-        Instance().addShader(name, shaderFile);
+    public static void AddShader(String name, String shaderFile) throws Exception {
+        try {
+            Instance().addShader(name, shaderFile);
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
-    public static Texture GetTexture(String name) {
-        return Instance().getTexture(name, false);
+    public static Texture GetTexture(String name) throws Exception {
+        try {
+            return Instance().getTexture(name, false);
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
-    public static Texture GetTextureFromPath(String filePath) {
-        return Instance().getTexture(filePath, true);
+    public static Texture GetTextureFromPath(String filePath) throws Exception {
+        try {
+            return Instance().getTexture(filePath, true);
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
-    public static Shader GetShader(String name) {
-        return Instance().getShader(name);
+    public static Shader GetShader(String name) throws Exception {
+        try {
+            return Instance().getShader(name);
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     private AssetLoader() {
@@ -85,13 +105,12 @@ public class AssetLoader {
         m_Instance = null;
     }
 
-    private void addTexture(String name, String path) {
+    private void addTexture(String name, String path) throws Exception {
         String fullPath = TEXTURES_DIR + path;
         for(Texture texture : m_TextureMap.values()) {
             String texturePath = texture.getFilepath();
             if(texturePath.equalsIgnoreCase(fullPath)) {
-                System.err.printf("[%s] already exists in the TextureMap!%n", fullPath);
-                return;
+                throw new Exception(fullPath + " already exists in the TextureMap!");
             }
         }
 
@@ -99,10 +118,9 @@ public class AssetLoader {
         m_TextureMap.put(name, texture);
     }
 
-    private void addShader(String name, String shaderFile) {
+    private void addShader(String name, String shaderFile) throws Exception {
         if(m_ShaderMap.containsKey(name)) {
-            System.err.println("Already contains shader: " + name);
-            return;
+            throw new Exception("Already contains shader: " + name);
         }
 
         String fullPath = SHADERS_DIR + shaderFile;
@@ -115,29 +133,28 @@ public class AssetLoader {
         m_ShaderMap.put(name, shader);
     }
 
-    private Texture getTexture(String name, boolean filePath) {
-        if(!filePath) { // Checks if the string give is a filepath or a Map Key
+    private Texture getTexture(String name, boolean filePath) throws Exception {
+        // Checks if the string give is a filepath or a Map Key
+        if(!filePath) {
             if(!m_TextureMap.containsKey(name)) {
-                System.err.println("Couldn't find Texture: " + name);
-                return null;
+                throw new Exception("Couldn't find Texture: " + name);
             }
 
             return m_TextureMap.get(name);
+        
         } else {
             for(Texture texture : m_TextureMap.values()) {
                 if(texture.getFilepath().equalsIgnoreCase(name))
                     return texture;
             }
 
-            System.err.println("Failed to find Texture from path: " + name);
-            return null;
+            throw new Exception("Failed to find Texture from path: " + name);
         }
     }
 
-    private Shader getShader(String name) {
+    private Shader getShader(String name) throws Exception {
         if(!m_ShaderMap.containsKey(name)) {
-            System.err.println("Couldn't find Shader: " + name);
-            return null;
+            throw new Exception("Couldn't find Shader: " + name);
         }
 
         return m_ShaderMap.get(name);

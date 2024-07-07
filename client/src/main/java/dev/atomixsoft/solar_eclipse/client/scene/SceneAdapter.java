@@ -2,7 +2,7 @@ package dev.atomixsoft.solar_eclipse.client.scene;
 
 public class SceneAdapter extends SceneHandler.Scene {
     @Override
-    public void show() {  }
+    public void show() throws Exception { }
 
     @Override
     public void hide() { }
@@ -14,7 +14,7 @@ public class SceneAdapter extends SceneHandler.Scene {
     public void update(double dt) { }
 
     @Override
-    public void render() { }
+    public void render() throws Exception { }
 
     @Override
     public void imgui() { }

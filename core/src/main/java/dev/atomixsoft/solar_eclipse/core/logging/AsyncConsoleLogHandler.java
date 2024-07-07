@@ -81,7 +81,11 @@ public class AsyncConsoleLogHandler implements LogHandler {
         context.start(builder.build());
     }
 
-
+    @Override
+    public void trace(String message) {
+        logger.trace(message);
+    }
+    
     @Override
     public void debug(String message) {
         logger.debug(message);

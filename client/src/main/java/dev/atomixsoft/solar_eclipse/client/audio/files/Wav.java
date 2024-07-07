@@ -20,14 +20,17 @@ public class Wav {
     private float m_SampleRate, m_FrameRate;
 
 
-    public Wav(String fileName) {
+    public Wav(String fileName) throws Exception {
         m_File = new File(fileName);
 
-        if(m_File.exists()) load();
-        else throw new RuntimeException("Failed to load file: " + fileName);
+        if(m_File.exists()) { 
+            load();
+        } else { 
+            throw new Exception("Failed to load file '" + fileName + "'!");
+        }
     }
 
-    private void load() {
+    private void load() throws Exception{
         //int totalFramesRead = 0;
         
         try {
@@ -52,9 +55,8 @@ public class Wav {
                 }
 
                 m_Data = out.toByteArray();
-            } catch (Exception ex) {
-                System.err.println(ex.getMessage());
-                System.exit(-1);
+            } catch (Exception e) {
+                throw e;
             }
 
             m_Channels   = format.getChannels();
@@ -65,8 +67,7 @@ public class Wav {
             m_FrameRate  = format.getFrameRate();
 
         } catch (Exception e) {
-            System.err.println(e.getMessage());
-            System.exit(-1);
+            throw e;
         }
     }
 
@@ -106,6 +107,9 @@ public class Wav {
 				
 				SampleRate: %f
 				FrameRate: %f
-				""", m_File.getPath(), getChannels(), getFrameSize(), getSampleSize(), getSampleRate(), getFrameRate());
+				""", 
+                m_File.getPath(), getChannels(), getFrameSize(),
+                getSampleSize(), getSampleRate(), getFrameRate()
+               );
     }
 }

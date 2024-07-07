@@ -1,4 +1,4 @@
-package dev.atomixsoft.solar_eclipse.client.logging;
+package dev.atomixsoft.solar_eclipse.client.util.logging;
 
 import dev.atomixsoft.solar_eclipse.core.logging.LogHandler;
 import dev.atomixsoft.solar_eclipse.core.logging.AsyncConsoleLogHandler;
@@ -24,6 +24,10 @@ public class Logger {
         }
     }
 
+    public void trace(String message) {
+        this.m_LogHandler.trace(message);
+    }
+    
     public void debug(String message) {
         this.m_LogHandler.debug(message);
     }

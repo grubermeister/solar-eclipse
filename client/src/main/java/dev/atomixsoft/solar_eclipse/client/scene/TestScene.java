@@ -7,11 +7,8 @@ import dev.atomixsoft.solar_eclipse.core.game.map.Tile;
 import org.joml.Vector3f;
 
 import dev.atomixsoft.solar_eclipse.core.game.Constants;
-
+import dev.atomixsoft.solar_eclipse.client.util.AssetLoader;
 import dev.atomixsoft.solar_eclipse.client.util.input.Controller;
-
-import dev.atomixsoft.solar_eclipse.client.AssetLoader;
-
 import dev.atomixsoft.solar_eclipse.client.graphics.render2D.SpriteBatch;
 import dev.atomixsoft.solar_eclipse.client.graphics.cameras.OrthoCamera;
 
@@ -28,7 +25,7 @@ public class TestScene extends SceneAdapter{
     int mapSize = 10;
 
     @Override
-    public void show() {
+    public void show() throws Exception {
         input = new Controller();
         mapRender = new GameRenderer();
 
@@ -44,10 +41,18 @@ public class TestScene extends SceneAdapter{
         pos.y = (camera.getHeight() - 16) / camera.getAspectRatio();
         camera.setPosition(pos);
 
-        AssetLoader.AddShader("basic", "basic");
+        try {
+            AssetLoader.AddShader("basic", "basic");
+        } catch (Exception e) {
+            throw e;
+        }
 
-        AssetLoader.AddTexture("tileset1", "tilesets/1.bmp");
-        AssetLoader.AddTexture("tileset2", "tilesets/2.bmp");
+        try {
+            AssetLoader.AddTexture("tileset1", "tilesets/1.bmp");
+            AssetLoader.AddTexture("tileset2", "tilesets/2.bmp");
+        } catch (Exception e) {
+            throw e;
+        }
 
         batch = new SpriteBatch(AssetLoader.GetShader("basic"));
 
@@ -101,7 +106,7 @@ public class TestScene extends SceneAdapter{
     }
 
     @Override
-    public void render() {
+    public void render() throws Exception {
         batch.begin(camera);
 
         mapRender.render(batch);

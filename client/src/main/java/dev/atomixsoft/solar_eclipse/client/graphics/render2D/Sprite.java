@@ -24,18 +24,34 @@ public class Sprite {
     }
 
     public Sprite(Texture texture) {
-        this(texture, new Vector3f(1.0f), new Vector3f(0.0f), new Vector2f(texture.getWidth(), texture.getHeight()), 1.0f);
+        this(texture, 
+             new Vector3f(1.0f), 
+             new Vector3f(0.0f), 
+             new Vector2f(texture.getWidth(), texture.getHeight()), 
+             1.0f);
     }
 
     public Sprite(Texture texture, Vector3f color, Vector3f position, Vector2f size, float scale) {
         this(texture, color, new Vector2f(0.0f), new Vector2f(1.0f), position, size, scale);
     }
 
-    public Sprite(Texture texture, Vector3f color, Vector2f cellPos, Vector2f cellSize, Vector3f position, Vector2f size, float scale) {
-        this(texture, color.x, color.y, color.z, cellPos.x, cellPos.y, cellSize.x, cellSize.y, position.x, position.y, position.z, size.x, size.y, scale);
+    public Sprite(Texture texture, Vector3f color, Vector2f cellPos, Vector2f cellSize, 
+                  Vector3f position, Vector2f size, float scale) {
+
+        this(texture, 
+             color.x, color.y, color.z, 
+             cellPos.x, cellPos.y, 
+             cellSize.x, cellSize.y, 
+             position.x, position.y, position.z, 
+             size.x, size.y, 
+             scale);
+
     }
 
-    public Sprite(Texture texture, float r, float g, float b, float cellX, float cellY, float cellWidth, float cellHeight, float x, float y, float layer, float width, float height, float scale) {
+    public Sprite(Texture texture, float r, float g, float b, float cellX, float cellY, 
+                  float cellWidth, float cellHeight, float x, float y, 
+                  float layer, float width, float height, float scale) {
+
         m_Texture = texture;
         m_Color = new Vector3f(r, g, b);
 
@@ -46,12 +62,19 @@ public class Sprite {
         m_Size = new Vector2f(width, height);
         m_Scale = scale;
         m_TileFactor = 1.0f;
+
     }
 
     public void draw(SpriteBatch batch) {
-        if(m_Texture == null) throw new IllegalStateException("Can't draw a Sprite without a texture!");
+        if(m_Texture == null) 
+            throw new IllegalStateException("Can't draw a Sprite without a texture!");
 
-        batch.render(m_Texture, m_CellPos, m_CellSize, m_Position, new Vector2f(m_Size).mul(m_Scale), m_Color, m_TileFactor);
+        batch.render(m_Texture, 
+                     m_CellPos, m_CellSize, 
+                     m_Position, 
+                     new Vector2f(m_Size).mul(m_Scale), 
+                     m_Color, 
+                     m_TileFactor);
     }
 
     public void setTexture(Texture texture) {
@@ -60,10 +83,13 @@ public class Sprite {
 
     public void setColor(float r, float g, float b) {
         boolean normalized = !(r > 1.0f || g > 1.0f || b > 1.0f);
+
         if(normalized)
             m_Color.set(r, g, b);
         else
-            m_Color.set(r > 0.0f ? r / 255.0f : 0.0f, g > 0.0f ? g / 255.0f : 0.0f, b > 0.0f ? b / 255.0f : 0.0f);
+            m_Color.set(r > 0.0f ? r / 255.0f : 0.0f, 
+                        g > 0.0f ? g / 255.0f : 0.0f, 
+                        b > 0.0f ? b / 255.0f : 0.0f);
     }
 
     public void setColor(Vector3f color) {

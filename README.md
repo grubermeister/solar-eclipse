@@ -2,7 +2,7 @@
 
 > Welcome to _**Eclipse Origins 4**_, a love letter to Visual Basic 2D ORPG Engines. 
 
-&emsp; This build, nicknamed _Solar Eclipse_, is version `4.3.1.1-alpha`.
+&emsp; This build, nicknamed _Solar Eclipse_, is version `4.3.2.1-alpha`.
 
 
 ## Table of Contents

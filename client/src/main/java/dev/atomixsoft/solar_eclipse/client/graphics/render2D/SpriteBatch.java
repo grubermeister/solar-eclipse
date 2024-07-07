@@ -5,7 +5,6 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.*;
 
-import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
@@ -30,16 +29,16 @@ import dev.atomixsoft.solar_eclipse.client.graphics.cameras.OrthoCamera;
 public class SpriteBatch {
     private static final int MAX_TEXTURE_SLOTS = 32;
 
-    private final Shader m_BatchShader;
-    private final int m_Size;
+    private Shader m_BatchShader;
+    private int m_Size;
 
-    private final HashMap<Integer, Texture> m_TextureSlots;
-    private final int m_VAO;
-    private final List<Integer> m_VBOList;
-    private final FloatBuffer m_Vertices;
-    private final IntBuffer m_Indices;
+    private HashMap<Integer, Texture> m_TextureSlots;
+    private int m_VAO;
+    private List<Integer> m_VBOList;
+    private FloatBuffer m_Vertices;
+    private IntBuffer m_Indices;
 
-    private final Texture m_WhiteTexture;
+    private Texture m_WhiteTexture;
     private int m_TextureSlotIndex;
     private int m_IndexCount;
 
@@ -51,7 +50,8 @@ public class SpriteBatch {
     }
 
     public SpriteBatch(int size, Shader shader) {
-        if(size > 8191) throw new IllegalArgumentException("Can't have more than 8191 sprites a batch: " + size);
+        if(size > 8191) 
+            throw new IllegalArgumentException("Can't have more than 8191 sprites a batch: " + size);
         shader.createUniform("u_ViewProjection");
         shader.createUniform("u_Textures");
 
@@ -142,7 +142,8 @@ public class SpriteBatch {
     }
 
     public void begin(OrthoCamera camera) {
-        if(m_Rendering) throw new IllegalStateException("You have to call end() before calling begin() when rendering.");
+        if(m_Rendering) 
+            throw new IllegalStateException("You have to call end() before calling begin() when rendering.");
         camera.update();
 
         glDisable(GL_DEPTH_TEST);
@@ -160,17 +161,30 @@ public class SpriteBatch {
         render(texture, position, layer, size, color, 1.0f);
     }
 
-    public void render(Texture texture, Vector2f position, float layer, Vector2f size, Vector3f color, float tileFactor) {
-        render(texture, new Vector2f(0.0f), new Vector2f(1.0f), new Vector3f(position.x, position.y, layer), size, color, tileFactor);
+    public void render(Texture texture, Vector2f position, float layer, 
+                       Vector2f size, Vector3f color, float tileFactor) {
+    
+        render(texture, 
+               new Vector2f(0.0f), 
+               new Vector2f(1.0f), 
+               new Vector3f(position.x, position.y, layer), 
+               size, 
+               color, 
+               tileFactor);
+
     }
 
-    public void render(Texture texture, Vector2f cellPos, Vector2f cellSize, Vector3f position, Vector2f size, Vector3f color, float tileFactor) {
+    public void render(Texture texture, Vector2f cellPos, Vector2f cellSize, 
+                       Vector3f position, Vector2f size, Vector3f color, float tileFactor) {
+
         if(m_IndexCount >= m_Size * 6)
             nextBatch();
 
         Vector2f halfSize = new Vector2f(size.x * 0.5f, size.y * 0.5f);
-        Vector2f uv1 = new Vector2f(cellPos.x == 0.0f ? cellPos.x : cellPos.x / texture.getWidth(), cellPos.y == 0.0f ? cellPos.y : cellPos.y / texture.getHeight());
-        Vector2f uv2 = new Vector2f(cellSize.x == 1.0f ? cellSize.x : (cellPos.x + cellSize.x) / texture.getWidth(), cellSize.y == 1.0f ? cellSize.y : (cellPos.y + cellSize.y) / texture.getHeight());
+        Vector2f uv1 = new Vector2f(cellPos.x == 0.0f ? cellPos.x : cellPos.x / texture.getWidth(), 
+                                    cellPos.y == 0.0f ? cellPos.y : cellPos.y / texture.getHeight());
+        Vector2f uv2 = new Vector2f(cellSize.x == 1.0f ? cellSize.x : (cellPos.x + cellSize.x) / texture.getWidth(), 
+                                    cellSize.y == 1.0f ? cellSize.y : (cellPos.y + cellSize.y) / texture.getHeight());
 
         float textureSlot = 0.0f;
         for(int i = 0; i < m_TextureSlotIndex; i++) {
@@ -191,15 +205,24 @@ public class SpriteBatch {
             m_TextureSlotIndex++;
         }
 
-        m_Vertices.put(position.x - halfSize.x).put(position.y + halfSize.y).put(position.z).put(color.x).put(color.y).put(color.z).put(1.0f).put(uv1.x).put(uv1.y).put(textureSlot).put(tileFactor); // Top Left
-        m_Vertices.put(position.x - halfSize.x).put(position.y - halfSize.y).put(position.z).put(color.x).put(color.y).put(color.z).put(1.0f).put(uv1.x).put(uv2.y).put(textureSlot).put(tileFactor); // Bottom Left
-        m_Vertices.put(position.x + halfSize.x).put(position.y - halfSize.y).put(position.z).put(color.x).put(color.y).put(color.z).put(1.0f).put(uv2.x).put(uv2.y).put(textureSlot).put(tileFactor); // Bottom Right
-        m_Vertices.put(position.x + halfSize.x).put(position.y + halfSize.y).put(position.z).put(color.x).put(color.y).put(color.z).put(1.0f).put(uv2.x).put(uv1.y).put(textureSlot).put(tileFactor); // Top Right
+        m_Vertices.put(position.x - halfSize.x).put(position.y + halfSize.y).put(position.z)
+                  .put(color.x).put(color.y).put(color.z).put(1.0f)
+                  .put(uv1.x).put(uv1.y).put(textureSlot).put(tileFactor); // Top Left
+        m_Vertices.put(position.x - halfSize.x).put(position.y - halfSize.y).put(position.z)
+                  .put(color.x).put(color.y).put(color.z).put(1.0f)
+                  .put(uv1.x).put(uv2.y).put(textureSlot).put(tileFactor); // Bottom Left
+        m_Vertices.put(position.x + halfSize.x).put(position.y - halfSize.y).put(position.z)
+                  .put(color.x).put(color.y).put(color.z).put(1.0f)
+                  .put(uv2.x).put(uv2.y).put(textureSlot).put(tileFactor); // Bottom Right
+        m_Vertices.put(position.x + halfSize.x).put(position.y + halfSize.y).put(position.z)
+                  .put(color.x).put(color.y).put(color.z).put(1.0f)
+                  .put(uv2.x).put(uv1.y).put(textureSlot).put(tileFactor); // Top Right
 
         m_IndexCount+= 6;
 
         if(m_Vertices.remaining() <= m_Size * 4)
             nextBatch();
+
     }
 
     public void end() {

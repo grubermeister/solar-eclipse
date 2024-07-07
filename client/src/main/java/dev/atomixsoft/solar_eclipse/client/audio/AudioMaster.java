@@ -11,6 +11,8 @@ import org.lwjgl.openal.*;
 import dev.atomixsoft.solar_eclipse.client.audio.files.Midi;
 import dev.atomixsoft.solar_eclipse.client.audio.files.Wav;
 
+import dev.atomixsoft.solar_eclipse.client.util.logging.Logger;
+
 
 /**
  * A static class meant to load Music and Sound Effects for use with OpenAL. <br />
@@ -28,24 +30,30 @@ public class AudioMaster {
 
     private long m_Device, m_Context;
 
+    private final Logger logger;
 
-    private AudioMaster() {
+
+    private AudioMaster(Logger logger) {
+        this.logger = logger;
         m_BufferMap = new HashMap<>();
     }
 
-    public static AudioMaster Instance() {
-        if(ms_Instance == null) ms_Instance = new AudioMaster();
+    public static AudioMaster Instance(Logger logger) {
+        if(ms_Instance == null) 
+            ms_Instance = new AudioMaster(logger);
+        
         return ms_Instance;
     }
 
     /**
      * Initializes OpenAL my getting the device ready and setting up the context.
      */
-    public static void Init() {
-        AudioMaster instance = Instance();
+    public static void Init(Logger logger) {
+        AudioMaster instance = Instance(logger);
 
         String defaultDevice = ALC11.alcGetString(0, ALC11.ALC_DEFAULT_DEVICE_SPECIFIER);
-        if(defaultDevice == null) throw new RuntimeException("Failed to find a default audio device!");
+        if(defaultDevice == null) 
+            throw new RuntimeException("Failed to find a default audio device!");
 
         instance.m_Device = ALC11.alcOpenDevice(defaultDevice);
         instance.m_alcCapabilities = ALC.createCapabilities(instance.m_Device);
@@ -59,14 +67,22 @@ public class AudioMaster {
     /**
      * Cleans up our buffers before cleaning up OpenAL
      */
-    public static void CleanUp() {
-        AudioMaster instance = Instance();
+    public static void CleanUp(Logger logger) {
+        AudioMaster instance = Instance(logger);
 
-        instance.m_BufferMap.values().forEach(AL11::alDeleteBuffers);
-        instance.m_BufferMap.clear();
+        logger.trace("Cleaning up OpenAL buffers...");
+        if(instance.m_BufferMap.isEmpty()) {
+            logger.trace("No buffers to clean up!");
+        } else {
+            instance.m_BufferMap.values().forEach(AL11::alDeleteBuffers);
+            instance.m_BufferMap.clear();
+        }
 
+        logger.trace("Setting OpenAL context to NULL...");
         ALC11.alcMakeContextCurrent(MemoryUtil.NULL);
         ALC11.alcDestroyContext(instance.m_Context);
+        
+        logger.trace("Closing OpenAL device...");
         ALC11.alcCloseDevice(instance.m_Device);
     }
 
@@ -77,7 +93,7 @@ public class AudioMaster {
      * @param fileName the path to the midi file
      * @return a buffer ID to be used with {@link AudioSource}
      */
-    public static int LoadMusic(String name, String fileName) {
+    public static int LoadMusic(String name, String fileName, Logger logger) throws Exception {
         int buffer = AL11.alGenBuffers();
 
         ByteBuffer byteBuffer = null;
@@ -89,12 +105,14 @@ public class AudioMaster {
 
             int format = FileFormat(file.getChannels(), file.getSampleSize());
             AL11.alBufferData(buffer, format, byteBuffer.flip(), (int) file.getSampleRate());
+        } catch(Exception e) {
+            throw e;
         } finally {
             if(byteBuffer != null)
                 MemoryUtil.memFree(byteBuffer);
         }
 
-        Instance().m_BufferMap.put(name, buffer);
+        Instance(logger).m_BufferMap.put(name, buffer);
 
         return buffer;
     }
@@ -106,7 +124,7 @@ public class AudioMaster {
      * @param fileName the path to the .wav file
      * @return a buffer ID to be used with {@link AudioSource}
      */
-    public static int LoadSound(String name, String fileName) {
+    public static int LoadSound(String name, String fileName, Logger logger) throws Exception {
         int buffer = AL11.alGenBuffers();
 
         ByteBuffer byteBuffer = null;
@@ -118,12 +136,14 @@ public class AudioMaster {
 
             int format = FileFormat(file.getChannels(), file.getSampleSize());
             AL11.alBufferData(buffer, format, byteBuffer, (int) file.getSampleRate());
+        } catch(Exception e) {
+            throw e;
         } finally {
             if(byteBuffer != null)
                 MemoryUtil.memFree(byteBuffer);
         }
 
-        Instance().m_BufferMap.put(name, buffer);
+        Instance(logger).m_BufferMap.put(name, buffer);
         return buffer;
     }
 
@@ -140,8 +160,10 @@ public class AudioMaster {
     private static int FileFormat(int channels, int sampleSize) {
         int format;
 
-        if(channels == 1) format = sampleSize == 8 ? AL11.AL_FORMAT_MONO8 : AL11.AL_FORMAT_MONO16;
-        else format = sampleSize == 8 ? AL11.AL_FORMAT_STEREO8 : AL11.AL_FORMAT_STEREO16;
+        if(channels == 1) 
+            format = sampleSize == 8 ? AL11.AL_FORMAT_MONO8 : AL11.AL_FORMAT_MONO16;
+        else 
+            format = sampleSize == 8 ? AL11.AL_FORMAT_STEREO8 : AL11.AL_FORMAT_STEREO16;
 
         return format;
     }

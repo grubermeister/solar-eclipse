@@ -16,12 +16,12 @@ public class SceneHandler {
 
     public abstract static class Scene {
 
-        public abstract void show();
+        public abstract void show() throws Exception;
         public abstract void hide();
         public abstract void dispose();
 
         public abstract void update(double dt);
-        public abstract void render();
+        public abstract void render() throws Exception;
         public abstract void imgui();
 
         public abstract void resize(int width, int height);
@@ -46,9 +46,13 @@ public class SceneHandler {
         }
     }
 
-    public void render(ImGuiManager guiManager) {
+    public void render(ImGuiManager guiManager) throws Exception {
         if(m_ActiveScene != null) {
-            m_ActiveScene.render();
+            try {
+                m_ActiveScene.render();
+            } catch (Exception e) {
+                throw e;
+            }
 
             guiManager.setup();
             m_ActiveScene.imgui();
@@ -61,32 +65,32 @@ public class SceneHandler {
             m_ActiveScene.resize(width, height);
     }
 
-    public void dispose() {
-        if(m_ActiveScene != null) setActiveScene("none");
+    public void dispose() throws Exception {
+        if(m_ActiveScene != null) {
+            try {
+                setActiveScene("none");
+            } catch (Exception e) {
+                throw e;
+            }
+        }
 
         for(Scene scene : m_SceneMap.values())
             scene.dispose();
     }
 
-    public void addScene(String name, Scene scene) {
-        if(scene == null) {
-            System.err.println("Can't store a null scene!");
-            return;
-        }
+    public void addScene(String name, Scene scene) throws Exception {
+        if(scene == null)
+            throw new Exception("Can't store a null scene!");
 
-        if(m_SceneMap.containsKey(name)) {
-            System.err.printf("Scene [%s] already exists!%n", name);
-            return;
-        }
+        if(m_SceneMap.containsKey(name))
+            throw new Exception("Scene " + name + " already exists!");
 
         m_SceneMap.put(name, scene);
     }
 
-    public void removeScene(String name) {
-        if(!m_SceneMap.containsKey(name)) {
-            System.err.printf("Scene [%s] wasn't found!%n", name);
-            return;
-        }
+    public void removeScene(String name) throws Exception {
+        if(!m_SceneMap.containsKey(name))
+            throw new Exception("Scene " + name + "wasn't found!");
 
         m_SceneMap.remove(name);
     }
@@ -95,13 +99,11 @@ public class SceneHandler {
         return m_ActiveScene;
     }
 
-    public void setActiveScene(String name) {
+    public void setActiveScene(String name) throws Exception{
         Scene scene = null;
         if(!name.isEmpty() && !name.equalsIgnoreCase("none")) {
-            if(!m_SceneMap.containsKey(name)) {
-                System.err.printf("Scene [%s] wasn't found!%n", name);
-                return;
-            }
+            if(!m_SceneMap.containsKey(name))
+                throw new Exception("Scene " + name + " wasn't found!");
 
             scene = m_SceneMap.get(name);
         }
@@ -109,8 +111,13 @@ public class SceneHandler {
         if(m_ActiveScene != null)
             m_ActiveScene.hide();
 
-        if(scene != null)
-            scene.show();
+        if(scene != null) {
+            try {
+                scene.show();
+            } catch (Exception e) {
+                throw e;
+            }
+        }
 
         m_ActiveScene = scene;
     }

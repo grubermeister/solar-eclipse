@@ -1,9 +1,8 @@
 package dev.atomixsoft.solar_eclipse.client.graphics;
 
-import dev.atomixsoft.solar_eclipse.client.AssetLoader;
 import dev.atomixsoft.solar_eclipse.client.graphics.render2D.Sprite;
 import dev.atomixsoft.solar_eclipse.client.graphics.render2D.SpriteBatch;
-
+import dev.atomixsoft.solar_eclipse.client.util.AssetLoader;
 import dev.atomixsoft.solar_eclipse.core.game.Actuator;
 import dev.atomixsoft.solar_eclipse.core.game.Constants;
 import dev.atomixsoft.solar_eclipse.core.game.map.GameMap;
@@ -15,15 +14,14 @@ public class GameRenderer {
 
     private GameMap m_Map;
 
-    public GameRenderer() {
 
-    }
+    public GameRenderer() { }
 
     public GameRenderer(GameMap map) {
         m_Map = map;
     }
 
-    public void render(SpriteBatch batch) {
+    public void render(SpriteBatch batch) throws Exception {
         if(m_Map == null) return;
         int numLayers = Math.min(m_Map.TileMap.keySet().size(), Constants.MAX_MAP_LAYERS);
 
@@ -33,14 +31,17 @@ public class GameRenderer {
                     Tile currTile = Actuator.GetTileFromMap(m_Map, layer, x, y);
                     if(currTile == null) continue;
 
-                    Sprite sprite = new Sprite(AssetLoader.GetTexture("tileset" + currTile.textureId));
-                    sprite.setCellPos(currTile.textureX * SPRITE_CELL_SIZE, currTile.textureY * SPRITE_CELL_SIZE);
-                    sprite.setCellSize(SPRITE_CELL_SIZE, SPRITE_CELL_SIZE);
+                    try {
+                        Sprite sprite = new Sprite(AssetLoader.GetTexture("tileset" + currTile.textureId));
+                        sprite.setCellPos(currTile.textureX * SPRITE_CELL_SIZE, currTile.textureY * SPRITE_CELL_SIZE);
+                        sprite.setCellSize(SPRITE_CELL_SIZE, SPRITE_CELL_SIZE);
+                        sprite.setPosition(x * 32, y * 32, 0);
+                        sprite.setSize(32, 32);
 
-                    sprite.setPosition(x * 32, y * 32, 0);
-                    sprite.setSize(32, 32);
-
-                    sprite.draw(batch);
+                        sprite.draw(batch);
+                    } catch (Exception e) {
+                        throw e;
+                    }
                 }
             }
         }
@@ -53,5 +54,4 @@ public class GameRenderer {
     public GameMap getMap() {
         return m_Map;
     }
-
 }

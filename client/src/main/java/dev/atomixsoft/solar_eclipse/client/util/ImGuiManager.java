@@ -1,5 +1,4 @@
 package dev.atomixsoft.solar_eclipse.client.util;
-
 import imgui.ImGui;
 import imgui.ImGuiIO;
 import imgui.flag.ImGuiConfigFlags;
@@ -9,12 +8,16 @@ import imgui.glfw.ImGuiImplGlfw;
 import static org.lwjgl.glfw.GLFW.glfwGetCurrentContext;
 import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
 
+import dev.atomixsoft.solar_eclipse.client.util.logging.Logger;
+
 public class ImGuiManager {
 
     private final ImGuiImplGl3 m_imguiImplGL3;
     private final ImGuiImplGlfw m_imguiImplGLFW;
+    private final Logger logger;
 
-    public ImGuiManager() {
+    public ImGuiManager(Logger logger) {
+        this.logger = logger;
         m_imguiImplGL3 = new ImGuiImplGl3();
         m_imguiImplGLFW = new ImGuiImplGlfw();
     }
@@ -47,9 +50,11 @@ public class ImGuiManager {
     }
 
     public void dispose() {
+        logger.trace("Disposing ImGuiManager resources...");
         m_imguiImplGL3.dispose();
         m_imguiImplGLFW.dispose();
 
+        logger.trace("Destroying ImGui context...");
         ImGui.destroyContext();
     }
 

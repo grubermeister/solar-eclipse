@@ -2,6 +2,7 @@ package dev.atomixsoft.solar_eclipse.core.logging;
 
 
 public interface LogHandler {
+    void trace(String msg);
     void debug(String msg);
     void info(String msg);
     void warn(String msg);

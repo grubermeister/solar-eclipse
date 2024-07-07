@@ -40,13 +40,7 @@ public class Controller {
         m_InputMap.putIfAbsent(controlName, new ArrayList<>());
         List<Integer> bindings = m_InputMap.get(controlName);
 
-        for(int keyBind : bindings) {
-            if (keyBind == key) {
-                System.out.println(controlName + " is already bound with " + key + "!");
-                return;
-            }
-        }
-
-        bindings.add(key);
+        if(!bindings.contains(key))
+            bindings.add(key);
     }
 }

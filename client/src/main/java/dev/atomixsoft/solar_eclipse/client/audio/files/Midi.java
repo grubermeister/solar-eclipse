@@ -2,12 +2,10 @@ package dev.atomixsoft.solar_eclipse.client.audio.files;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.UnsupportedAudioFileException;
 
 
 public class Midi {
@@ -19,16 +17,20 @@ public class Midi {
     private float m_SampleRate, m_FrameRate;
 
 
-    public Midi(String filePath) {
-        m_File = new File(filePath);
-        load();
+    public Midi(String fileName) throws Exception{
+        m_File = new File(fileName);
+
+        if(m_File.exists()) { 
+            load();
+        } else { 
+            throw new Exception("Failed to load file '" + fileName + "'!");
+        }
     }
 
-    private void load() {
+    private void load() throws Exception {
         try {
             AudioInputStream ais = AudioSystem.getAudioInputStream(m_File);
             AudioFormat format = ais.getFormat();
-
 
             int bufferSize = 1024 * 8;
             byte[] buffer = new byte[bufferSize];
@@ -40,9 +42,8 @@ public class Midi {
                     out.write(buffer, 0, numBytesRead);
 
                 m_Data = out.toByteArray();
-            } catch (Exception ex) {
-                System.err.println(ex.getMessage());
-                System.exit(-1);
+            } catch (Exception e) {
+                throw e;
             }
 
             m_Channels   = format.getChannels();
@@ -51,9 +52,8 @@ public class Midi {
 
             m_SampleRate = format.getSampleRate();
             m_FrameRate  = format.getFrameRate();
-        } catch (IOException | UnsupportedAudioFileException e) {
-            System.err.println(e.getMessage());
-            System.exit(-1);
+        } catch (Exception e) {
+            throw e;
         }
     }
 
@@ -91,6 +91,9 @@ public class Midi {
 				
 				SampleRate: %f
 				FrameRate: %f
-				""", m_File.getPath(), getChannels(), getFrameSize(), getSampleSize(), getSampleRate(), getFrameRate());
+				""", 
+                m_File.getPath(), getChannels(), getFrameSize(), 
+                getSampleSize(), getSampleRate(), getFrameRate()
+               );
     }
 }
