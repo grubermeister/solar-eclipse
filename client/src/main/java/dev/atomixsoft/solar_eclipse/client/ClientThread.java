@@ -9,6 +9,7 @@ import dev.atomixsoft.solar_eclipse.client.util.Window;
 
 import dev.atomixsoft.solar_eclipse.client.util.input.Input;
 import dev.atomixsoft.solar_eclipse.client.util.logging.Logger;
+import dev.atomixsoft.solar_eclipse.client.util.logging.Logger.Log4jGLFWErrorCallback;
 import dev.atomixsoft.solar_eclipse.client.audio.AudioMaster;
 
 import dev.atomixsoft.solar_eclipse.client.graphics.RenderCmd;
@@ -43,10 +44,9 @@ public class ClientThread implements Runnable {
         if(m_Running)
             return;
 
-        if(!glfwInit()) {
-            logger.error("Failed to initialize GLFW!");
+        glfwSetErrorCallback(logger.new Log4jGLFWErrorCallback());
+        if(!glfwInit()) 
             throw new RuntimeException("Failed to initialize GLFW!");
-        }
 
         m_Running = true;
         m_Thread.start();

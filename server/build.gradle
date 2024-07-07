@@ -1,6 +1,9 @@
 plugins {
     id 'application'
 }
+ext {
+    nettyVersion = "4.1.111.Final"
+}
 
 def dataDir = "${rootProject.projectDir}/data"
 
@@ -10,6 +13,8 @@ application {
 
 dependencies {
     implementation project(':core')
+
+    implementation "io.netty:netty-all:$nettyVersion"
 }
 
 task debug(type: JavaExec) {

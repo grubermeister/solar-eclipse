@@ -1,15 +1,13 @@
-package dev.atomixsoft.solar_eclipse.client.config;
+package dev.atomixsoft.solar_eclipse.server.config;
 
 import dev.atomixsoft.solar_eclipse.core.config.*;
 
 
 public class Configuration {
     private String NAME_VAR;
-    private String USER_VAR, PASS_VAR, SAVE_PASS_VAR;
+    private String MOTD_VAR;
     private String IP_VAR;
     private Integer PORT_VAR;
-    private String MENU_MUSIC_VAR;
-    private String MUSIC_VAR, SOUND_VAR;
     private String DEBUG_VAR;
 
     public String LOG_LEVEL_VAR, LOG_PATTERN_VAR;
@@ -38,16 +36,11 @@ public class Configuration {
         try {
             this.m_ConfigFile.load(path);
 
-            this.NAME_VAR = this.m_ConfigFile.getValue("client.sGameName");
-            this.USER_VAR = this.m_ConfigFile.getValue("client.sUsername");
-            this.PASS_VAR = this.m_ConfigFile.getValue("client.sPassword");
-            this.SAVE_PASS_VAR = this.m_ConfigFile.getValue("client.bSavePass");
-            this.IP_VAR = this.m_ConfigFile.getValue("client.sIP");
-            this.PORT_VAR = Integer.parseInt(this.m_ConfigFile.getValue("client.iPort"));
-            this.MENU_MUSIC_VAR = this.m_ConfigFile.getValue("client.sMenuMusic");
-            this.MUSIC_VAR = this.m_ConfigFile.getValue("client.bMusic");
-            this.SOUND_VAR = this.m_ConfigFile.getValue("client.bSound");
-            this.DEBUG_VAR = this.m_ConfigFile.getValue("client.bDebug");
+            this.NAME_VAR = this.m_ConfigFile.getValue("server.sGameName");
+            this.MOTD_VAR = this.m_ConfigFile.getValue("server.sMotD");
+            this.IP_VAR = this.m_ConfigFile.getValue("server.sIP");
+            this.PORT_VAR = Integer.parseInt(this.m_ConfigFile.getValue("server.iPort"));
+            this.DEBUG_VAR = this.m_ConfigFile.getValue("server.bDebug");
 
             this.LOG_LEVEL_VAR = this.m_ConfigFile.getValue("logging.sLevel");
             this.LOG_PATTERN_VAR = this.m_ConfigFile.getValue("logging.sPattern");
@@ -59,37 +52,13 @@ public class Configuration {
     public String getGameName() {
         return this.NAME_VAR;
     }
-
-    public String getUsername() {
-        return this.USER_VAR;
-    }
-
-    public String getPassword() {
-        return this.PASS_VAR;
-    }
-
-    public String getSavePass() {
-        return this.SAVE_PASS_VAR;
-    }
-
+    
     public String getIP() {
         return this.IP_VAR;
     }
 
     public Integer getPort() {
         return this.PORT_VAR;
-    }
-
-    public String getMenuMusic() {
-        return this.MENU_MUSIC_VAR;
-    }
-
-    public String getMusic() {
-        return this.MUSIC_VAR;
-    }
-
-    public String getSound() {
-        return this.SOUND_VAR;
     }
 
     public String getDebug() {

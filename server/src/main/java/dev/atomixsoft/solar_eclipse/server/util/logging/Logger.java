@@ -1,25 +1,14 @@
-package dev.atomixsoft.solar_eclipse.client.util.logging;
-
-import org.lwjgl.glfw.GLFWErrorCallback;
+package dev.atomixsoft.solar_eclipse.server.util.logging;
 
 import dev.atomixsoft.solar_eclipse.core.logging.LogHandler;
 import dev.atomixsoft.solar_eclipse.core.logging.AsyncConsoleLogHandler;
+
 
 public class Logger {
     private LogHandler m_LogHandler;
 
     public enum SupportedLogHandlerTypes {
         ASYNC_CONSOLE
-    }
-
-
-    public class Log4jGLFWErrorCallback extends GLFWErrorCallback {
-        @Override
-        public void invoke(int error, long description) {
-            String errorMsg = GLFWErrorCallback.getDescription(description);
-            
-            Logger.this.error("GLFW Error [" + error + "]: " + errorMsg);
-        }
     }
 
 
