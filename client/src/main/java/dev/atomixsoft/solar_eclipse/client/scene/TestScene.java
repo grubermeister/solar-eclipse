@@ -1,6 +1,6 @@
 package dev.atomixsoft.solar_eclipse.client.scene;
 
-import dev.atomixsoft.solar_eclipse.client.graphics.GameRenderer;
+import dev.atomixsoft.solar_eclipse.client.graphics.renderers.GameRenderer;
 import dev.atomixsoft.solar_eclipse.core.game.Actuator;
 import dev.atomixsoft.solar_eclipse.core.game.map.GameMap;
 import dev.atomixsoft.solar_eclipse.core.game.map.Tile;
@@ -14,8 +14,6 @@ import dev.atomixsoft.solar_eclipse.client.AssetLoader;
 
 import dev.atomixsoft.solar_eclipse.client.graphics.render2D.SpriteBatch;
 import dev.atomixsoft.solar_eclipse.client.graphics.cameras.OrthoCamera;
-
-import static org.lwjgl.glfw.GLFW.*;
 
 /**
  * <p>Purely for prototyping features in the earlier stages of development.</p>

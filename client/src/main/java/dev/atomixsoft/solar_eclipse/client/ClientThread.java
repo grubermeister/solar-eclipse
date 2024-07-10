@@ -22,6 +22,11 @@ import dev.atomixsoft.solar_eclipse.client.scene.TestScene;
 
 
 public class ClientThread implements Runnable {
+    private static ClientThread s_Instance = null;
+    public static Logger log() {
+        return s_Instance.m_Logger;
+    }
+
     private final Controller m_Controller;
     private final Thread m_Thread;
     private final Logger m_Logger;
@@ -43,6 +48,8 @@ public class ClientThread implements Runnable {
         this.m_Thread = new Thread(this, "Main_Thread");
         this.m_Logger = logger;
         this.m_GUIManager = new ImGuiManager();
+
+        if(s_Instance == null) s_Instance = this;
     }
 
     public synchronized void start() {
