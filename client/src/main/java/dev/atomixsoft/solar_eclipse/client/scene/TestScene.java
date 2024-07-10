@@ -17,41 +17,34 @@ import dev.atomixsoft.solar_eclipse.client.graphics.cameras.OrthoCamera;
 
 import static org.lwjgl.glfw.GLFW.*;
 
-
+/**
+ * <p>Purely for prototyping features in the earlier stages of development.</p>
+ */
 public class TestScene extends SceneAdapter{
 
     private OrthoCamera camera;
     private SpriteBatch batch;
-    private Controller input;
     private GameRenderer mapRender;
 
     int mapSize = 10;
 
     @Override
     public void show() {
-        input = new Controller();
         mapRender = new GameRenderer();
-
-        input.addBinding("camUp", GLFW_KEY_UP);
-        input.addBinding("camDown", GLFW_KEY_DOWN);
-        input.addBinding("camLeft", GLFW_KEY_LEFT);
-        input.addBinding("camRight", GLFW_KEY_RIGHT);
-
         camera = new OrthoCamera(800, 600);
 
-        Vector3f pos = camera.getPosition();
-        pos.x = (camera.getWidth() - 16) / camera.getAspectRatio();
-        pos.y = (camera.getHeight() - 16) / camera.getAspectRatio();
-        camera.setPosition(pos);
-
         AssetLoader.AddShader("basic", "basic");
+        batch = new SpriteBatch(AssetLoader.GetShader("basic"));
+
+        Vector3f pos = camera.getPosition();
+        pos.x = (camera.getWidth() - 16) / (camera.getAspectRatio() * camera.getZoom());
+        pos.y = (camera.getHeight() - 16) / (camera.getAspectRatio() * camera.getZoom());
+        camera.setPosition(pos);
 
         AssetLoader.AddTexture("tileset1", "tilesets/1.bmp");
         AssetLoader.AddTexture("tileset2", "tilesets/2.bmp");
 
-        batch = new SpriteBatch(AssetLoader.GetShader("basic"));
-
-        GameMap testMap = new GameMap(0, 0, 20, 20);
+        GameMap testMap = new GameMap(0, 0, 40, 40);
 
         Tile grassTile = new Tile();
         grassTile.textureId = 1;
@@ -81,7 +74,7 @@ public class TestScene extends SceneAdapter{
     }
 
     @Override
-    public void update(double dt) {
+    public void update(Controller input, double dt) {
         Vector3f position = camera.getPosition();
 
         float cameraSpeed = 300; // Adjust this as needed

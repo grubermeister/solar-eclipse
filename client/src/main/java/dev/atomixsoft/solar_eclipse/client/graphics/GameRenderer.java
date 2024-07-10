@@ -9,7 +9,9 @@ import dev.atomixsoft.solar_eclipse.core.game.Constants;
 import dev.atomixsoft.solar_eclipse.core.game.map.GameMap;
 import dev.atomixsoft.solar_eclipse.core.game.map.Tile;
 
-
+/**
+ * <p>Handles rendering for the visible Game World on the client side. (NPCs, PCs, Tiles, Resources, etc)</p>
+ */
 public class GameRenderer {
     private static final int SPRITE_CELL_SIZE = 32;
 
@@ -27,12 +29,15 @@ public class GameRenderer {
         if(m_Map == null) return;
         int numLayers = Math.min(m_Map.TileMap.keySet().size(), Constants.MAX_MAP_LAYERS);
 
+        // Currently just goes through each layer and renders the Tiles that exist
+        // Eventually will want this to separate the roof and other layers so the Characters can be in between
         for(var layer = 0; layer < numLayers; ++layer) {
             for(var x = 0; x < m_Map.width; ++x) {
                 for(var y = 0; y < m_Map.height; ++y) {
                     Tile currTile = Actuator.GetTileFromMap(m_Map, layer, x, y);
                     if(currTile == null) continue;
 
+                    // Creates sprite to render based on the Tile information
                     Sprite sprite = new Sprite(AssetLoader.GetTexture("tileset" + currTile.textureId));
                     sprite.setCellPos(currTile.textureX * SPRITE_CELL_SIZE, currTile.textureY * SPRITE_CELL_SIZE);
                     sprite.setCellSize(SPRITE_CELL_SIZE, SPRITE_CELL_SIZE);

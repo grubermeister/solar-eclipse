@@ -3,6 +3,7 @@ package dev.atomixsoft.solar_eclipse.client;
 import dev.atomixsoft.solar_eclipse.client.logging.Logger;
 
 import dev.atomixsoft.solar_eclipse.client.util.ImGuiManager;
+import dev.atomixsoft.solar_eclipse.client.util.input.Controller;
 import org.lwjgl.glfw.GLFWErrorCallback;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -21,8 +22,9 @@ import dev.atomixsoft.solar_eclipse.client.scene.TestScene;
 
 
 public class ClientThread implements Runnable {
+    private final Controller m_Controller;
     private final Thread m_Thread;
-    private final Logger logger;
+    private final Logger m_Logger;
 
     private volatile boolean m_Running;
 
@@ -37,8 +39,9 @@ public class ClientThread implements Runnable {
         m_Title = title;
         m_Running = false;
 
+        this.m_Controller = new Controller();
         this.m_Thread = new Thread(this, "Main_Thread");
-        this.logger = logger;
+        this.m_Logger = logger;
         this.m_GUIManager = new ImGuiManager();
     }
 
@@ -48,7 +51,7 @@ public class ClientThread implements Runnable {
 
         m_ErrorCallback = GLFWErrorCallback.createPrint(System.err);
         if(!glfwInit()) {
-            this.logger.error("Failed to initialize GLFW!");
+            this.m_Logger.error("Failed to initialize GLFW!");
             throw new RuntimeException("Failed to initialize the program!");
         }
 
@@ -67,6 +70,12 @@ public class ClientThread implements Runnable {
         m_GUIManager.init(m_Window.getHandle(), "#version 130");
         AudioMaster.Init();
 
+        //TODO: Load Input from config
+        m_Controller.addBinding("camUp", GLFW_KEY_UP);
+        m_Controller.addBinding("camDown", GLFW_KEY_DOWN);
+        m_Controller.addBinding("camLeft", GLFW_KEY_LEFT);
+        m_Controller.addBinding("camRight", GLFW_KEY_RIGHT);
+
         m_Scenes.addScene("Test", new TestScene());
         m_Scenes.addScene("Main", new MainScene());
 
@@ -75,7 +84,7 @@ public class ClientThread implements Runnable {
     }
 
     private void dispose() {
-        this.logger.debug("Client thread cleaning up...");
+        this.m_Logger.debug("Client thread cleaning up...");
 
         AudioMaster.CleanUp();
 
@@ -83,11 +92,12 @@ public class ClientThread implements Runnable {
             if(m_Scenes != null)
                 m_Scenes.dispose();
 
-            if(!m_Window.shouldClose())
+            if(m_Window != null)
                 m_Window.close();
 
             m_GUIManager.dispose();
             AssetLoader.Dispose();
+
             if(m_ErrorCallback != null) {
                 m_ErrorCallback.free();
                 glfwSetErrorCallback(null);
@@ -96,7 +106,7 @@ public class ClientThread implements Runnable {
             glfwTerminate();
             m_Thread.join(1);
 
-            this.logger.debug("Client thread terminated.");
+            this.m_Logger.debug("Client thread terminated.");
             System.exit(0);
         } catch (InterruptedException e) {
             System.err.println(e.getMessage());
@@ -106,7 +116,7 @@ public class ClientThread implements Runnable {
 
     @Override
     public void run() {
-        this.logger.debug("Client thread running...");
+        this.m_Logger.debug("Client thread running...");
 
         m_Window = new Window(m_Title, 800, 600);
         m_Window.show();
@@ -114,7 +124,7 @@ public class ClientThread implements Runnable {
         RenderCmd.Init();
         RenderCmd.ClearColor(0.05f, 0.05f, 0.05f);
 
-        m_Scenes = new SceneHandler(m_Window);
+        m_Scenes = new SceneHandler(m_Controller, m_Window);
         initialize();
 
         double accumulator = 0.0;

@@ -5,57 +5,14 @@ import java.util.Map;
 
 import static org.lwjgl.glfw.GLFW.*;
 
-
+/**
+ * <p>Handles input interactions for the app, allows us to manage the key/button states after GLFW gives us feedback.</p>
+ */
 public class Input {
     private static Input ms_Instance = null;
 
     private final Map<Integer, Key> m_Keys;
     private final Map<Integer, MButton> m_MButtons;
-
-
-    private static class Key {
-        int presses = 0, absorbs = 0;
-        boolean down = false, justPressed = false;
-
-        void toggle(boolean pressed) {
-            if(pressed != down)
-                down = pressed;
-
-            if(pressed) ++presses;
-        }
-
-        void update() {
-            if(absorbs < presses) {
-                justPressed = true;
-                ++absorbs;
-            } else {
-                justPressed = false;
-            }
-        }
-    }
-
-    private static class MButton {
-        int presses = 0, absorbs = 0;
-        boolean down = false, justClicked = false;
-
-
-        void toggle(boolean pressed) {
-            if(pressed != down)
-                down = pressed;
-
-            if(pressed) ++presses;
-        }
-
-        void update() {
-            if(absorbs < presses) {
-                justClicked = true;
-                ++absorbs;
-            } else {
-                justClicked = false;
-            }
-        }
-    }
-
 
     public static Input Instance() {
         if(ms_Instance == null) ms_Instance = new Input();
@@ -110,5 +67,53 @@ public class Input {
         if(mapped == null) return;
 
         mapped.toggle(action != GLFW_RELEASE);
+    }
+
+    /**
+     * <p>Basic class for a Keyboard key, lets us know if its just been pressed or is held.</p>
+     */
+    private static class Key {
+        int presses = 0, absorbs = 0;
+        boolean down = false, justPressed = false;
+
+        void toggle(boolean pressed) {
+            if(pressed != down)
+                down = pressed;
+
+            if(pressed) ++presses;
+        }
+
+        void update() {
+            if(absorbs < presses) {
+                justPressed = true;
+                ++absorbs;
+            } else {
+                justPressed = false;
+            }
+        }
+    }
+
+    /**
+     * <p>Basic class for a Mouse Button, lets us know if its just been clicked or is held.</p>
+     */
+    private static class MButton {
+        int presses = 0, absorbs = 0;
+        boolean down = false, justClicked = false;
+
+        void toggle(boolean pressed) {
+            if(pressed != down)
+                down = pressed;
+
+            if(pressed) ++presses;
+        }
+
+        void update() {
+            if(absorbs < presses) {
+                justClicked = true;
+                ++absorbs;
+            } else {
+                justClicked = false;
+            }
+        }
     }
 }
