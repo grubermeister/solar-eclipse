@@ -1,10 +1,9 @@
-package dev.atomixsoft.solar_eclipse.client.graphics.renderers;
+package dev.atomixsoft.solar_eclipse.client.graphics;
 
 import dev.atomixsoft.solar_eclipse.client.AssetLoader;
-import dev.atomixsoft.solar_eclipse.client.graphics.Texture;
+
 import dev.atomixsoft.solar_eclipse.client.graphics.render2D.Sprite;
 import dev.atomixsoft.solar_eclipse.client.graphics.render2D.SpriteBatch;
-
 import dev.atomixsoft.solar_eclipse.core.game.Actuator;
 import dev.atomixsoft.solar_eclipse.core.game.Constants;
 import dev.atomixsoft.solar_eclipse.core.game.character.Character;
@@ -67,7 +66,7 @@ public class GameRenderer {
             if(c == null || c.removed) continue;
 
             int keyFrame = Math.max(0, Math.min(c.keyFrame, 3));
-            Sprite sprite = new Sprite(AssetLoader.GetTextureFromPath("chara" + c.textureId));
+            Sprite sprite = new Sprite(AssetLoader.GetTexture("char" + c.textureId));
 
             float cellWidth = sprite.getTexture().getWidth() / 4.0f, cellHeight = sprite.getTexture().getHeight() / 4.0f;
             sprite.setCellSize(cellWidth, cellHeight);
@@ -80,8 +79,8 @@ public class GameRenderer {
                 case RIGHT -> sprite.setCellPos(keyFrame * cellWidth, cellHeight * 2);
             }
 
-            sprite.setPosition(c.x, c.y, 0);
-            sprite.setSize(SPRITE_CELL_SIZE, SPRITE_CELL_SIZE);
+            sprite.setPosition(c.x * cellWidth, c.y * cellHeight + cellHeight / 2, 0);
+            sprite.setSize(cellWidth * 2, cellHeight * 2);
 
             sprite.draw(batch);
         }

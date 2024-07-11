@@ -1,7 +1,8 @@
 package dev.atomixsoft.solar_eclipse.client.scene;
 
-import dev.atomixsoft.solar_eclipse.client.graphics.renderers.GameRenderer;
+import dev.atomixsoft.solar_eclipse.client.graphics.GameRenderer;
 import dev.atomixsoft.solar_eclipse.core.game.Actuator;
+import dev.atomixsoft.solar_eclipse.core.game.character.Character;
 import dev.atomixsoft.solar_eclipse.core.game.map.GameMap;
 import dev.atomixsoft.solar_eclipse.core.game.map.Tile;
 import org.joml.Vector3f;
@@ -42,6 +43,10 @@ public class TestScene extends SceneAdapter{
         AssetLoader.AddTexture("tileset1", "tilesets/1.bmp");
         AssetLoader.AddTexture("tileset2", "tilesets/2.bmp");
 
+        AssetLoader.AddTexture("char1", "characters/1.bmp");
+        AssetLoader.AddTexture("char2", "characters/2.bmp");
+        AssetLoader.AddTexture("char3", "characters/3.bmp");
+
         GameMap testMap = new GameMap(0, 0, 40, 40);
 
         Tile grassTile = new Tile();
@@ -62,6 +67,25 @@ public class TestScene extends SceneAdapter{
         Actuator.AddTileToMap(testMap, trunkTile, 1, 2, 2);
         Actuator.AddTileToMap(testMap, trunkTile, 1, 10, 8);
         Actuator.AddTileToMap(testMap, trunkTile, 1, 10, 13);
+
+        Character testChar = new Character();
+        testChar.name = "Angel";
+        testChar.textureId = 3;
+        testChar.keyFrame = 0;
+        testChar.facing = Character.Direction.DOWN;
+        testChar.player = false;
+        testChar.sex = Constants.SEX_OTHER;
+
+        Character testChar2 = new Character();
+        testChar2.name = "Jim";
+        testChar2.textureId = 1;
+        testChar2.keyFrame = 0;
+        testChar2.facing = Character.Direction.UP;
+        testChar2.player = true;
+        testChar2.sex = Constants.SEX_MALE;
+
+        Actuator.AddCharacterToMap(testMap, testChar, 0, 0);
+        Actuator.AddCharacterToMap(testMap, testChar2, 3, 10);
 
         mapRender.setMap(testMap);
     }
