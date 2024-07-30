@@ -149,7 +149,8 @@ public class Actuator {
     }
 
     public static void AddCharactersToMap(GameMap map, List<Character> characters, int x, int y) {
-        // TODO: Decide whether or not this will be needed
+        for(Character c : characters)
+            AddCharacterToMap(map, c, x, y);
     }
 
 }

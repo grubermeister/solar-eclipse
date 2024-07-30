@@ -5,7 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
+/**
+ * <p>Lets us map Mouse/Keyboard to predefined key functions. Think of it as the average keybinding situation.</p>
+ */
 public class Controller {
     private final Input m_In;
     private final Map<String, List<Integer>> m_InputMap;
@@ -36,17 +38,17 @@ public class Controller {
         return false;
     }
 
-    public void addBinding(String controlName, int key) {
+    public void addBinding(String controlName, int input) {
         m_InputMap.putIfAbsent(controlName, new ArrayList<>());
         List<Integer> bindings = m_InputMap.get(controlName);
 
         for(int keyBind : bindings) {
-            if (keyBind == key) {
-                System.out.println(controlName + " is already bound with " + key + "!");
+            if (keyBind == input) {
+                System.out.println(controlName + " is already bound with " + input + "!");
                 return;
             }
         }
 
-        bindings.add(key);
+        bindings.add(input);
     }
 }

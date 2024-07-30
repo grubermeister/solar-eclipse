@@ -1,5 +1,7 @@
 package dev.atomixsoft.solar_eclipse.client.scene;
 
+import dev.atomixsoft.solar_eclipse.client.util.input.Controller;
+
 public class SceneAdapter extends SceneHandler.Scene {
     @Override
     public void show() {  }
@@ -11,7 +13,7 @@ public class SceneAdapter extends SceneHandler.Scene {
     public void dispose() { }
 
     @Override
-    public void update(double dt) { }
+    public void update(Controller input, double dt) { }
 
     @Override
     public void render() { }

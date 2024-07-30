@@ -16,13 +16,19 @@ public class OrthoCamera extends Camera {
     }
 
     public void update() {
+        update(true);
+    }
+
+    public void update(boolean inverted) {
         Quaternionf rotation = new Quaternionf().rotationXYZ(0f, 0f, Math.toRadians(getRotation().z));
         Vector3f position = getPosition();
         float zoom = getZoom();
 
         m_View.identity();
-        //m_View.translate(-position.x, -position.y, -position.z);
-        m_View.translate(position.x, position.y, 0.0f);
+
+        if(inverted) m_View.translate(-position.x, -position.y, 0.0f);
+        else m_View.translate(position.x, position.y, 0.0f);
+
         m_View.rotate(rotation);
         m_View.scale(zoom, zoom, 1.0f);
     }
