@@ -7,7 +7,7 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
-import dev.atomixsoft.solar_eclipse.client.util.input.Input;
+import dev.atomixsoft.solar_eclipse.client.util.input.InputHandler;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
@@ -74,7 +74,8 @@ public class Window {
         glfwSwapInterval(swapInterval);
 
         glfwSetWindowSizeCallback(m_Handle, this::resize);
-        glfwSetKeyCallback(m_Handle, Input::key_callback);
+        glfwSetKeyCallback(m_Handle, InputHandler::key_callback);
+        glfwSetMouseButtonCallback(m_Handle, InputHandler::mouse_button_callback);
 
         GL.createCapabilities();
     }

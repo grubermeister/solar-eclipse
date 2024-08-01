@@ -5,6 +5,7 @@ import dev.atomixsoft.solar_eclipse.core.game.Actuator;
 import dev.atomixsoft.solar_eclipse.core.game.character.Character;
 import dev.atomixsoft.solar_eclipse.core.game.map.GameMap;
 import dev.atomixsoft.solar_eclipse.core.game.map.Tile;
+import imgui.ImGui;
 import org.joml.Vector3f;
 
 import dev.atomixsoft.solar_eclipse.core.game.Constants;
@@ -15,6 +16,8 @@ import dev.atomixsoft.solar_eclipse.client.AssetLoader;
 
 import dev.atomixsoft.solar_eclipse.client.graphics.render2D.SpriteBatch;
 import dev.atomixsoft.solar_eclipse.client.graphics.cameras.OrthoCamera;
+
+import static dev.atomixsoft.solar_eclipse.core.event.types.InputEvent.InputType;
 
 /**
  * <p>Purely for prototyping features in the earlier stages of development.</p>
@@ -35,9 +38,10 @@ public class TestScene extends SceneAdapter{
         AssetLoader.AddShader("basic", "basic");
         batch = new SpriteBatch(AssetLoader.GetShader("basic"));
 
+        camera.setZoom(3);
         Vector3f pos = camera.getPosition();
-        pos.x = (camera.getWidth() - 16) / (camera.getAspectRatio() * camera.getZoom());
-        pos.y = (camera.getHeight() - 16) / (camera.getAspectRatio() * camera.getZoom());
+        pos.x = 0;
+        pos.y = 0;
         camera.setPosition(pos);
 
         AssetLoader.AddTexture("tileset1", "tilesets/1.bmp");
@@ -102,15 +106,21 @@ public class TestScene extends SceneAdapter{
         float cameraSpeed = 300; // Adjust this as needed
 
         // Example control: move the camera with arrow keys
-        if (input.isPressed("camUp"))
-            position.y += cameraSpeed * dt;
-        else if (input.isPressed("camDown"))
-            position.y -= cameraSpeed * dt;
+        if (input.isPressed(InputType.UP))
+            position.y += (float) (cameraSpeed * dt);
+        else if (input.isPressed(InputType.DOWN))
+            position.y -= (float) (cameraSpeed * dt);
 
-        if (input.isPressed("camLeft"))
-            position.x -= cameraSpeed * dt;
-        else if (input.isPressed("camRight"))
-            position.x += cameraSpeed * dt;
+        if (input.isPressed(InputType.LEFT))
+            position.x -= (float) (cameraSpeed * dt);
+        else if (input.isPressed(InputType.RIGHT))
+            position.x += (float) (cameraSpeed * dt);
+
+        if(position.x < (camera.getWidth() - 8  * camera.getZoom()) / (camera.getAspectRatio()))
+            position.x = (camera.getWidth() - 8  * camera.getZoom()) / (camera.getAspectRatio());
+
+        if(position.y < (camera.getHeight() - 8 * camera.getZoom()) / (camera.getAspectRatio()))
+            position.y = (camera.getHeight() - 8 * camera.getZoom()) / (camera.getAspectRatio());
 
         camera.setPosition(position);
     }
@@ -122,6 +132,13 @@ public class TestScene extends SceneAdapter{
         mapRender.render(batch);
 
         batch.end();
+    }
+
+    @Override
+    public void imgui() {
+        ImGui.begin("Test Inventory");
+
+        ImGui.end();
     }
 
     @Override
