@@ -26,7 +26,7 @@ public class Configuration {
 
     public Configuration(SupportedConfigFileTypes fileType ) {
         switch(fileType) {
-            case SupportedConfigFileTypes.INI:
+            case INI:
                 this.m_ConfigFile = new INIConfigurationFile();
 
                 break;

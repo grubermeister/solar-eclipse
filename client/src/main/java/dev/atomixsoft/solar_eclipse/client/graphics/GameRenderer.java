@@ -1,6 +1,6 @@
 package dev.atomixsoft.solar_eclipse.client.graphics;
 
-import dev.atomixsoft.solar_eclipse.client.AssetLoader;
+import dev.atomixsoft.solar_eclipse.client.util.AssetLoader;
 
 import dev.atomixsoft.solar_eclipse.client.ClientThread;
 import dev.atomixsoft.solar_eclipse.client.graphics.render2D.Sprite;
@@ -51,14 +51,18 @@ public class GameRenderer {
                     else if(!roofs && currTile.roof) continue;
 
                     // Creates sprite to render based on the Tile information
-                    Sprite sprite = new Sprite(AssetLoader.GetTexture("tileset" + currTile.textureId));
-                    sprite.setCellPos(currTile.textureX * SPRITE_CELL_SIZE, currTile.textureY * SPRITE_CELL_SIZE);
-                    sprite.setCellSize(SPRITE_CELL_SIZE, SPRITE_CELL_SIZE);
+                    try{
+                        Sprite sprite = new Sprite(AssetLoader.GetTexture("tileset" + currTile.textureId));
+                        sprite.setCellPos(currTile.textureX * SPRITE_CELL_SIZE, currTile.textureY * SPRITE_CELL_SIZE);
+                        sprite.setCellSize(SPRITE_CELL_SIZE, SPRITE_CELL_SIZE);
 
-                    sprite.setPosition(x * TILE_SIZE, y * TILE_SIZE, 0);
-                    sprite.setSize(TILE_SIZE, TILE_SIZE);
+                        sprite.setPosition(x * TILE_SIZE, y * TILE_SIZE, 0);
+                        sprite.setSize(TILE_SIZE, TILE_SIZE);
 
-                    sprite.draw(batch);
+                        sprite.draw(batch);
+                    } catch (Exception e) {
+                        
+                    }
                 }
             }
         }
@@ -70,15 +74,19 @@ public class GameRenderer {
             Item item = worldItems.get(i);
             if(item == null || !item.inWorld) continue;
 
-            Sprite itemSprite = new Sprite(AssetLoader.GetTexture("items" + i));
-            itemSprite.setCellPos(0, 0);
-            itemSprite.setCellSize(32, 32);
+            try {
+                Sprite itemSprite = new Sprite(AssetLoader.GetTexture("items" + i));
+                itemSprite.setCellPos(0, 0);
+                itemSprite.setCellSize(32, 32);
 
-            itemSprite.setPosition(item.worldX * TILE_SIZE, item.worldY * TILE_SIZE, 0);
-            itemSprite.setSize(TILE_SIZE, TILE_SIZE);
+                itemSprite.setPosition(item.worldX * TILE_SIZE, item.worldY * TILE_SIZE, 0);
+                itemSprite.setSize(TILE_SIZE, TILE_SIZE);
 
-            itemSprite.draw(batch);
-            count++;
+                itemSprite.draw(batch);
+                count++;
+            } catch (Exception e) {
+
+            }
         }
 
         if(count != 0)
@@ -90,23 +98,27 @@ public class GameRenderer {
             Character c = charList.get(i);
             if(c == null || c.removed) continue;
 
-            int keyFrame = Math.max(0, Math.min(c.keyFrame, 3));
-            Sprite sprite = new Sprite(AssetLoader.GetTexture("char" + c.textureId));
+            try {
+                int keyFrame = Math.max(0, Math.min(c.keyFrame, 3));
+                Sprite sprite = new Sprite(AssetLoader.GetTexture("char" + c.textureId));
 
-            float cellWidth = sprite.getTexture().getWidth() / 4.0f, cellHeight = sprite.getTexture().getHeight() / 4.0f;
-            sprite.setCellSize(cellWidth, cellHeight);
+                float cellWidth = sprite.getTexture().getWidth() / 4.0f, cellHeight = sprite.getTexture().getHeight() / 4.0f;
+                sprite.setCellSize(cellWidth, cellHeight);
 
-            switch (c.facing) {
-                case UP -> sprite.setCellPos(keyFrame * cellWidth, cellHeight * 3);
-                case DOWN -> sprite.setCellPos(keyFrame * cellWidth, 0);
-                case LEFT -> sprite.setCellPos(keyFrame * cellWidth, cellHeight);
-                case RIGHT -> sprite.setCellPos(keyFrame * cellWidth, cellHeight * 2);
+                switch (c.facing) {
+                    case UP -> sprite.setCellPos(keyFrame * cellWidth, cellHeight * 3);
+                    case DOWN -> sprite.setCellPos(keyFrame * cellWidth, 0);
+                    case LEFT -> sprite.setCellPos(keyFrame * cellWidth, cellHeight);
+                    case RIGHT -> sprite.setCellPos(keyFrame * cellWidth, cellHeight * 2);
+                }
+
+                sprite.setPosition(c.x * cellWidth, c.y * cellHeight + 16 + 8, 0);
+                sprite.setSize(cellWidth, cellHeight);
+
+                sprite.draw(batch);
+            } catch (Exception e) {
+                
             }
-
-            sprite.setPosition(c.x * cellWidth, c.y * cellHeight + 16 + 8, 0);
-            sprite.setSize(cellWidth, cellHeight);
-
-            sprite.draw(batch);
         }
     }
 

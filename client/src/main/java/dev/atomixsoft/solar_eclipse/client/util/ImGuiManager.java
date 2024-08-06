@@ -1,4 +1,5 @@
 package dev.atomixsoft.solar_eclipse.client.util;
+
 import imgui.ImGui;
 import imgui.ImGuiIO;
 import imgui.flag.ImGuiConfigFlags;
@@ -7,6 +8,9 @@ import imgui.glfw.ImGuiImplGlfw;
 
 import static org.lwjgl.glfw.GLFW.glfwGetCurrentContext;
 import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
+
+import dev.atomixsoft.solar_eclipse.client.util.logging.Logger;
+
 
 /**
  * <p>Handles everything required to use imgui with our project.</p>

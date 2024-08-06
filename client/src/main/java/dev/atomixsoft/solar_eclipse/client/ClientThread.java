@@ -3,6 +3,7 @@ package dev.atomixsoft.solar_eclipse.client;
 import dev.atomixsoft.solar_eclipse.client.util.AssetLoader;
 import dev.atomixsoft.solar_eclipse.client.util.ImGuiManager;
 import dev.atomixsoft.solar_eclipse.client.util.input.Controller;
+import dev.atomixsoft.solar_eclipse.client.util.logging.Logger;
 import dev.atomixsoft.solar_eclipse.core.event.EventBus;
 import dev.atomixsoft.solar_eclipse.core.event.types.InputEvent;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -43,6 +44,8 @@ public class ClientThread implements Runnable {
     private SceneHandler m_Scenes;
     private ImGuiManager m_GUIManager;
 
+    private GLFWErrorCallback m_ErrorCallback;
+
 
     public ClientThread(String title, Logger logger) {
         m_Title = title;
@@ -53,7 +56,7 @@ public class ClientThread implements Runnable {
 
         this.m_Thread = new Thread(this, "Main_Thread");
         this.m_Logger = logger;
-        this.m_GUIManager = new ImGuiManager();
+        this.m_GUIManager = new ImGuiManager(logger);
 
         if(s_Instance == null) s_Instance = this;
     }
@@ -80,7 +83,7 @@ public class ClientThread implements Runnable {
         m_Running = false;
 
         if(m_Thread.isAlive()) {
-            logger.error("Thread did not stop in time, forcing interrupt...");
+            m_Logger.error("Thread did not stop in time, forcing interrupt...");
             m_Thread.interrupt();
         }
     }
@@ -91,32 +94,33 @@ public class ClientThread implements Runnable {
 
     private void initialize() {
         m_GUIManager.init(m_Window.getHandle(), "#version 130");
-        logger.debug("GUI loaded.");
+        m_Logger.debug("GUI loaded.");
 
-        AudioMaster.Init(this.logger);
-        logger.debug("Audio loaded.");
+        AudioMaster.Init(m_Logger);
+        m_Logger.debug("Audio loaded.");
 
         try {
             m_Scenes.addScene("Test", new TestScene());
             m_Scenes.addScene("Main", new MainScene());
-            logger.debug("Scenes loaded.");
+            m_Logger.debug("Scenes loaded.");
             
             m_Scenes.setActiveScene("Test");
             m_Scenes.getActiveScene().resize(m_Window.getWidth(), m_Window.getHeight());
         } catch (Exception e) {
-            logger.error(e.getStackTrace().toString());
+            m_Logger.error(e.getStackTrace().toString());
         }
     }
 
     private void dispose() {
         this.m_Logger.debug("Client thread cleaning up...");
 
-        AudioMaster.CleanUp();
+        AudioMaster.CleanUp(m_Logger);
 
         try {
-            if(m_Scenes != null)
+            if(m_Scenes != null) {
                 m_Scenes.dispose();
-            logger.debug("Scenes unloaded.");
+                m_Logger.debug("Scenes unloaded.");
+            }
 
             if(m_Window != null)
                 m_Window.close();
@@ -136,7 +140,7 @@ public class ClientThread implements Runnable {
 
             this.m_Logger.debug("Client thread terminated.");
             System.exit(0);
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             this.m_Logger.error(e.getMessage());
             System.exit(-1);
         }
@@ -154,7 +158,6 @@ public class ClientThread implements Runnable {
 
         m_Scenes = new SceneHandler(m_Controller, m_Window);
         initialize();
-        Input input = Input.Instance();
 
         double accumulator = 0.0;
         double optimal = 1.0 / 60.0;
@@ -162,7 +165,6 @@ public class ClientThread implements Runnable {
         double newTime = System.nanoTime() / 1e9;
         double frameTime = 0.0;
 
-        InputHandler input = InputHandler.Instance();
         ClientThread.eventBus().register(InputEvent.class, InputHandler.Instance());
         while(m_Running) {
             if(m_Window.shouldClose()) {
@@ -181,7 +183,6 @@ public class ClientThread implements Runnable {
             accumulator += frameTime;
 
             while(accumulator >= optimal) {
-                input.process();
                 m_Scenes.update(optimal);
                 accumulator -= optimal;
             }
@@ -192,7 +193,7 @@ public class ClientThread implements Runnable {
                 m_Scenes.render(m_GUIManager);
                 m_Window.swapBuffers();
             } catch (Exception e) {
-                logger.error(e.getStackTrace().toString());
+                m_Logger.error(e.getStackTrace().toString());
             }
 
             glfwPollEvents();

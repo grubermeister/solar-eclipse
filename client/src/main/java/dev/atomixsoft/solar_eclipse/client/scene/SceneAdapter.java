@@ -16,7 +16,7 @@ public class SceneAdapter extends SceneHandler.Scene {
     public void update(Controller input, double dt) { }
 
     @Override
-    public void render() throws Exception { }
+    public void render() { }
 
     @Override
     public void imgui() { }

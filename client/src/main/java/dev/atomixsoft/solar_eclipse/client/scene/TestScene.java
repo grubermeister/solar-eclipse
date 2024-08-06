@@ -32,8 +32,13 @@ public class TestScene extends SceneAdapter{
         mapRender = new GameRenderer();
         camera = new OrthoCamera(800, 600);
 
-        AssetLoader.AddShader("basic", "basic");
-        batch = new SpriteBatch(AssetLoader.GetShader("basic"));
+        try {
+            AssetLoader.AddShader("basic", "basic");
+            batch = new SpriteBatch(AssetLoader.GetShader("basic"));
+        } catch (Exception e) {
+
+        }
+        
 
         camera.setZoom(3);
         Vector3f pos = camera.getPosition();
@@ -44,13 +49,12 @@ public class TestScene extends SceneAdapter{
         try {
             AssetLoader.AddTexture("tileset1", "tilesets/1.bmp");
             AssetLoader.AddTexture("tileset2", "tilesets/2.bmp");
+            AssetLoader.AddTexture("char1", "characters/1.bmp");
+            AssetLoader.AddTexture("char2", "characters/2.bmp");
+            AssetLoader.AddTexture("char3", "characters/3.bmp");
         } catch (Exception e) {
-            throw e;
+            
         }
-
-        AssetLoader.AddTexture("char1", "characters/1.bmp");
-        AssetLoader.AddTexture("char2", "characters/2.bmp");
-        AssetLoader.AddTexture("char3", "characters/3.bmp");
 
         GameMap testMap = new GameMap(0, 0, 40, 40);
 
@@ -127,10 +131,14 @@ public class TestScene extends SceneAdapter{
     }
 
     @Override
-    public void render() throws Exception {
+    public void render() {
         batch.begin(camera);
 
-        mapRender.render(batch);
+        try {
+            mapRender.render(batch);
+        } catch (Exception e) {
+            
+        }
 
         batch.end();
     }
