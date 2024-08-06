@@ -5,10 +5,17 @@ import java.util.Map;
 
 import dev.atomixsoft.solar_eclipse.client.util.ImGuiManager;
 import dev.atomixsoft.solar_eclipse.client.util.Window;
+import dev.atomixsoft.solar_eclipse.client.util.input.Controller;
 
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
 
+/**
+ * <p>Helps manager the adding and changing of scenes for our application.</p>
+ */
 public class SceneHandler {
     private final Map<String, Scene> m_SceneMap;
+    private final Controller m_Controller;
     private final Window m_Window;
 
     private Scene m_ActiveScene;
@@ -20,8 +27,8 @@ public class SceneHandler {
         public abstract void hide();
         public abstract void dispose();
 
-        public abstract void update(double dt);
-        public abstract void render() throws Exception;
+        public abstract void update(Controller input, double dt);
+        public abstract void render();
         public abstract void imgui();
 
         public abstract void resize(int width, int height);
@@ -29,8 +36,9 @@ public class SceneHandler {
     }
 
 
-    public SceneHandler(Window window) {
+    public SceneHandler(Controller controller, Window window) {
         m_SceneMap = new HashMap<>();
+        m_Controller = controller;
         m_Window = window;
         m_ActiveScene = null;
     }
@@ -42,7 +50,7 @@ public class SceneHandler {
                 m_Window.setResized(false);
             }
 
-            m_ActiveScene.update(dt);
+            m_ActiveScene.update(m_Controller, dt);
         }
     }
 

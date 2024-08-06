@@ -5,10 +5,11 @@ import org.joml.Vector3f;
 
 import org.lwjgl.openal.AL11;
 
-
+/**
+ * <p>Allows us to have multiple sources of Audio playing around the world at once.</p>
+ */
 public class AudioSource {
     private final int m_SourceID;
-
 
     public AudioSource() {
         m_SourceID = AL11.alGenSources();

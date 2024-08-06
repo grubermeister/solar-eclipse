@@ -7,7 +7,9 @@ import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 
-
+/**
+ * <p>Reads a MID/MIDI file and stores the information, so we can use it with OpenAL.</p>
+ */
 public class Midi {
     private final File m_File;
 

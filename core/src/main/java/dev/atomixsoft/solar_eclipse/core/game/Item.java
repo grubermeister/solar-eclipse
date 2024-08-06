@@ -7,14 +7,21 @@ public class Item {
     public String name;
     public String textureName;
 
-    public int stack;
+    public boolean inWorld;
+    public int worldX, worldY;
+
+    public int stack, maxStack;
     public boolean stackable;
 
     public Item() {
         name = "niL";
         textureName = "niL";
 
+        inWorld = false;
+        worldX = worldY = 0;
+
         stack = 0;
+        maxStack = 1;
         stackable = true;
     }
 

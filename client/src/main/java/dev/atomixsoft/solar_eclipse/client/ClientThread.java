@@ -2,14 +2,17 @@ package dev.atomixsoft.solar_eclipse.client;
 
 import dev.atomixsoft.solar_eclipse.client.util.AssetLoader;
 import dev.atomixsoft.solar_eclipse.client.util.ImGuiManager;
+import dev.atomixsoft.solar_eclipse.client.util.input.Controller;
+import dev.atomixsoft.solar_eclipse.core.event.EventBus;
+import dev.atomixsoft.solar_eclipse.core.event.types.InputEvent;
+import org.lwjgl.glfw.GLFWErrorCallback;
 
 import static org.lwjgl.glfw.GLFW.*;
 
 import dev.atomixsoft.solar_eclipse.client.util.Window;
 
-import dev.atomixsoft.solar_eclipse.client.util.input.Input;
-import dev.atomixsoft.solar_eclipse.client.util.logging.Logger;
-import dev.atomixsoft.solar_eclipse.client.util.logging.Logger.Log4jGLFWErrorCallback;
+import dev.atomixsoft.solar_eclipse.client.util.input.InputHandler;
+
 import dev.atomixsoft.solar_eclipse.client.audio.AudioMaster;
 
 import dev.atomixsoft.solar_eclipse.client.graphics.RenderCmd;
@@ -20,8 +23,18 @@ import dev.atomixsoft.solar_eclipse.client.scene.TestScene;
 
 
 public class ClientThread implements Runnable {
+    private static ClientThread s_Instance = null;
+    public static Logger log() {
+        return s_Instance.m_Logger;
+    }
+    public static EventBus eventBus() {
+        return s_Instance.m_EventBus;
+    }
+
+    private final Controller m_Controller;
+    private final EventBus m_EventBus;
     private final Thread m_Thread;
-    private final Logger logger;
+    private final Logger m_Logger;
 
     private volatile boolean m_Running;
 
@@ -35,18 +48,25 @@ public class ClientThread implements Runnable {
         m_Title = title;
         m_Running = false;
 
-        this.m_Thread = new Thread(this, "Client_Thread");
-        this.logger = logger;
-        this.m_GUIManager = new ImGuiManager(this.logger);
+        this.m_Controller = new Controller();
+        this.m_EventBus = new EventBus();
+
+        this.m_Thread = new Thread(this, "Main_Thread");
+        this.m_Logger = logger;
+        this.m_GUIManager = new ImGuiManager();
+
+        if(s_Instance == null) s_Instance = this;
     }
 
     public synchronized void start() {
         if(m_Running)
             return;
 
-        glfwSetErrorCallback(logger.new Log4jGLFWErrorCallback());
-        if(!glfwInit()) 
-            throw new RuntimeException("Failed to initialize GLFW!");
+        m_ErrorCallback = GLFWErrorCallback.createPrint(System.err);
+        if(!glfwInit()) {
+            this.m_Logger.error("Failed to initialize GLFW!");
+            throw new RuntimeException("Failed to initialize the program!");
+        }
 
         m_Running = true;
         m_Thread.start();
@@ -89,49 +109,50 @@ public class ClientThread implements Runnable {
     }
 
     private void dispose() {
-        logger.debug("Cleaning up...");
+        this.m_Logger.debug("Client thread cleaning up...");
+
+        AudioMaster.CleanUp();
 
         try {
             if(m_Scenes != null)
                 m_Scenes.dispose();
             logger.debug("Scenes unloaded.");
 
-            AudioMaster.CleanUp(this.logger);
-            logger.debug("Audio unloaded.");
-
-            AssetLoader.Dispose();
-            logger.debug("Assets unloaded.");
+            if(m_Window != null)
+                m_Window.close();
 
             m_GUIManager.dispose();
-            if(!m_Window.shouldClose())
-                m_Window.close();
-            logger.debug("GUI unloaded.");
+            AssetLoader.Dispose();
+            m_EventBus.shutdown();
+
+            if(m_ErrorCallback != null) {
+                m_ErrorCallback.free();
+                glfwSetErrorCallback(null);
+            }
 
             glfwPostEmptyEvent();
             glfwTerminate();
-            logger.debug("GLFW terminated.");
-        } catch (Exception e) {
-            logger.error(e.getStackTrace().toString());
-            e.printStackTrace();
-        } finally {
-            try {
-                m_Thread.join();
-                logger.debug("Thread cleaned.");
-            } catch (InterruptedException e) {
-                logger.error("Error joining thread: " + e.getMessage());
-            }
+            m_Thread.join(1);
+
+            this.m_Logger.debug("Client thread terminated.");
+            System.exit(0);
+        } catch (InterruptedException e) {
+            this.m_Logger.error(e.getMessage());
+            System.exit(-1);
         }
     }
 
     @Override
     public void run() {
+        this.m_Logger.debug("Client thread running...");
+
         m_Window = new Window(m_Title, 800, 600);
         m_Window.show();
 
         RenderCmd.Init();
         RenderCmd.ClearColor(0.05f, 0.05f, 0.05f);
 
-        m_Scenes = new SceneHandler(m_Window);
+        m_Scenes = new SceneHandler(m_Controller, m_Window);
         initialize();
         Input input = Input.Instance();
 
@@ -141,7 +162,8 @@ public class ClientThread implements Runnable {
         double newTime = System.nanoTime() / 1e9;
         double frameTime = 0.0;
 
-        logger.debug("Running...");
+        InputHandler input = InputHandler.Instance();
+        ClientThread.eventBus().register(InputEvent.class, InputHandler.Instance());
         while(m_Running) {
             if(m_Window.shouldClose()) {
                 stop();
@@ -189,7 +211,7 @@ public class ClientThread implements Runnable {
                 Thread.sleep(sleepTime);
 
         } catch (InterruptedException e) {
-            System.err.println(e.getMessage());
+            m_Logger.debug(e.getMessage());
         }
     }
 }

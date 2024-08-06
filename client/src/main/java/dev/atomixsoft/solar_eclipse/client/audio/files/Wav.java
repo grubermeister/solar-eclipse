@@ -9,7 +9,7 @@ import javax.sound.sampled.AudioSystem;
 
 
 /**
- * Reads a WAV file and stores the information, so we can use it with OpenAL.
+ * <p>Reads a WAV file and stores the information, so we can use it with OpenAL.</p>
  */
 public class Wav {
     private final File m_File;

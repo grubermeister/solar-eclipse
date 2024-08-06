@@ -1,5 +1,10 @@
 package dev.atomixsoft.solar_eclipse.client.scene;
 
+import dev.atomixsoft.solar_eclipse.client.util.input.Controller;
+
+/**
+ * <p>Represents the Main Menu of our game, from here you'll see everything involving the login screen for the client.</p>
+ */
 public class MainScene extends SceneAdapter{
     @Override
     public void show() {
@@ -12,7 +17,7 @@ public class MainScene extends SceneAdapter{
     }
 
     @Override
-    public void update(double dt) {
+    public void update(Controller input, double dt) {
         // TODO: Update Code
     }
 
